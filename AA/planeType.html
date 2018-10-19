@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+	</head>
+	<style type="text/css">
+		#typeDivname {
+			text-align: center;
+		}
+		
+		#box {
+			width: 100%;
+			height: 24rem;
+			background-color: #C8C7CC;
+			overflow-x: scroll;
+			overflow-y: hidden;
+			white-space: nowrap;
+			margin-top: 1rem;
+		}
+		
+		#box>div {
+			display: inline-block;
+		}
+	</style>
+
+	<body style="background: ;">
+
+		<div id="">
+			<div id="" style="float:left ;">
+				<span onclick="exitBtn()" id="backMain" style="color: ;font-size:5rem;" class="mui-icon mui-icon-back"></span>
+			</div>
+
+			<div id="typeDivname" style="">
+				<h1>飞机型号</h1>
+			</div>
+
+		</div>
+		<div id="" style="clear: both;"></div>
+
+		<hr />
+
+		<div id="box">
+			<!--<div id="" style="width:15rem ;height:15rem;background: #C8C7CC;border-radius:10px ;margin:1rem;text-align: center;">
+				<label>
+					<div id="" style="height: 90%;">
+					<img src="img/airplane2.png" style="width: 13rem;height:12rem" />
+					</div>
+					<div id="" style="width:100%;text-align: center;">
+						<span id="">
+							myTy
+						</span>
+						<input name="checkbox1" checked="true" value="'+myType[key].typename+'" type="radio" >
+					</div>
+				</label>
+			</div>-->
+		</div>
+
+		<div id="" style="width: 33%;height:20rem;float:left;background: ;margin-top: 1rem;margin-left: 1rem;">
+			<div id="" style=" ">
+				<div id="" style="display: inline-block;">
+					机型:
+				</div>
+				<div id="" style="display: inline-block;margin-left: 1rem;">
+					<input type="text" name="" id="typeInput" placeholder="请输入飞机型号" value="" />
+				</div>
+			</div>
+			<div id="" style="margin-top: 1rem;">
+				<div id="" style="display: inline-block;float: left;height:3rem;line-height: 3rem;">
+					选择飞机模型:
+				</div>
+				<div id="" onclick="galleryImg()" style="width:3rem;height:3rem;margin-left: 1rem;float: left;display: inline-block; background-color: #FAF2CC;text-align: center;line-height: 3rem;border: 1px dashed #CCCCCC;">
+					<span class="mui-icon mui-icon-plusempty"></span>
+				</div>
+				<div id="imgDiv" style="display:;background:;float: left;margin-left: 1rem;">
+					<!--<img src="img/1.png" id="imgLr" style="width:5rem;"/>-->
+				</div>
+
+			</div>
+
+		</div>
+		<div id="" style="width:33%;height: 200px;float:left;background: ;margin-top: 1rem">
+			<div id="" style="display: inline-block;">
+				属性:
+			</div>
+			<div id="" style="display: inline-block;margin-left: 1rem;">
+				<input type="text" name="" id="typeInput" placeholder="请输入属性" value="" />
+			</div><br />
+			<div id="" style="display: inline-block;">
+				属性:
+			</div>
+			<div id="" style="display: inline-block;margin-left: 1rem;">
+				<input type="text" name="" id="typeInput" placeholder="请输入属性" value="" />
+			</div><br />
+			<div id="" style="display: inline-block;">
+				属性:
+			</div>
+			<div id="" style="display: inline-block;margin-left: 1rem;">
+				<input type="text" name="" id="typeInput" placeholder="请输入属性" value="" />
+			</div><br />
+
+			<div id="" style="display: inline-block;">
+				属性:
+			</div>
+			<div id="" style="display: inline-block;margin-left: 1rem;">
+				<input type="text" name="" id="typeInput" placeholder="请输入属性" value="" />
+			</div><br />
+		</div>
+		<div id="" style="width:33%;height: 250px;float:left;background:;margin-top: 1rem">
+			<div id="" style="display: inline-block;">
+				属性:
+			</div>
+			<div id="" style="display: inline-block;margin-left: 1rem;">
+				<input type="text" name="" id="typeInput" placeholder="请输入属性" value="" />
+			</div><br />
+
+			<div id="" style="display: inline-block;">
+				属性:
+			</div>
+			<div id="" style="display: inline-block;margin-left: 1rem;">
+				<input type="text" name="" id="typeInput" placeholder="请输入属性" value="" />
+			</div><br />
+			<div id="" style="margin-top: ;margin-left: ;">
+				<button onclick="luruBtn()" type="button" class="btn btn-primary btn-lg active"><span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>录入机型</button>
+			</div>
+		</div>
+		<div id="" style="clear: both;"></div>
+		<hr />
+		<!--<button onclick="xxx()">测试</button>-->
+		<div style="padding: 0px 3rem 0px 68rem;">
+			<button onclick="okBtn()" type="button" class="btn btn-primary btn-lg active"><span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>确认机型</button>
+			<button onclick="exitBtn()" type="button" class="btn btn-primary btn-lg active"><span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>取消</button>
+		</div>
+	</body>
+	<script src="js/mui.min.js"></script>
+	<script src="js/jquery.min.js"></script>
+	<script type="text/javascript">
+		var myType = JSON.parse(localStorage.getItem('planeTypeS'));
+		var html = '';
+		for(var key in myType) {
+			console.log(myType[key].typename)
+			html += '<div id="" style="width:22rem ;height:22rem;background: white;border-radius:10px ;margin:1rem;padding-top:1rem;text-align: center;">' +
+				'<label>' +
+				'<div id="" style="height: 90%;">' +
+				//				'<img src="img/airplane2.png" style="width: 13rem;height:12rem" />' +
+				'<img src="' + myType[key].path + '" style="width: 100%;height:19rem" />' +
+				'</div>' +
+				'<div id="" style="width:100%;bottom: -2rem;text-align: center;">' +
+				'<span id="">' +
+				myType[key].typename +
+				'</span>' +
+				'<input name="checkbox1" checked="true" value="' + myType[key].typename + '" type="radio" >' +
+				'</div>' +
+				'</label>' +
+				'</div>';
+
+		}
+		$("#box").append(html);
+		console.log(myType)
+	</script>
+	<script type="text/javascript">
+		var imgPath = '';
+
+		function xxx() {
+			localStorage.removeItem('planeTypeS')
+		}
+
+		function luruBtn() {
+			console.log($("#typeInput").val())
+			var obj = {};
+			obj.typename = $("#typeInput").val();
+			obj.path = imgPath;
+			var arr = [];
+
+			if(localStorage.getItem('planeTypeS') == null) {
+				arr.push(obj);
+				var xxx = localStorage.setItem('planeTypeS', JSON.stringify(arr))
+			} else {
+				var xxx = JSON.parse(localStorage.getItem('planeTypeS'));
+				xxx.push(obj)
+				var xxx1 = localStorage.setItem('planeTypeS', JSON.stringify(xxx))
+				console.log(xxx)
+			}
+
+			html = '<div id="" style="width:22rem ;height:22rem;background: white;border-radius:10px ;margin:1rem;padding-top:1rem;text-align: center;">' +
+				'<label>' +
+				'<div id="" style="height: 90%;">' +
+				//	'<img src="img/airplane2.png" style="width: 13rem;height:12rem" />'+
+				'<img src="' + imgPath + '" style="width: 100%;height:19rem"/>' +
+				'</div>' +
+				'<div id="" style="width:100%;bottom: -2rem;text-align: center;">' +
+				'<span id="">' +
+				$("#typeInput").val() +
+				'</span>' +
+				'<input name="checkbox1" checked="true" value="' + $("#typeInput").val() + '" type="radio" >' +
+				'</div>' +
+				'</label>' +
+				'</div>';
+			$("#box").append(html);
+
+		}
+
+		function okBtn() {
+			var planeType = $('input:radio[name="checkbox1"]:checked').val(); //型号type
+			console.log(planeType)
+			localStorage.setItem('planeType', JSON.stringify(planeType));
+			window.location.href = 'main.html';
+		}
+
+		function exitBtn() {
+			var planeType = ''; //型号type
+			localStorage.setItem('planeType', JSON.stringify(planeType));
+			window.location.href = 'main.html';
+		}
+
+		// 从相册中选择图片 
+		function galleryImg() {
+			// 从相册中选择图片
+			console.log("从相册中选择图片:");
+			plus.gallery.pick(function(path) {
+				console.log(path);
+				imgPath = path;
+				var html = '<img src="' + path + '"  style="width:5rem;height:5rem"/>';
+				$('#imgDiv').html(html);
+			}, function(e) {
+				console.log("取消选择图片");
+			}, {
+				filter: "image"
+			});
+		}
+	</script>
+
+</html>

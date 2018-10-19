@@ -1,0 +1,1671 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.plusReady(function() {
+
+				if(mui.os.ios) {
+
+					plus.screen.lockOrientation("landscape-primary");
+
+				}
+
+			});
+		</script>
+		<script>
+			function setCookie(cname, cvalue, exdays) {
+				var d = new Date();
+				d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+				var expires = "expires=" + d.toGMTString();
+				document.cookie = cname + "=" + cvalue + "; " + expires;
+			}
+
+			function getCookie(cname) {
+				var name = cname + "=";
+				var ca = document.cookie.split(';');
+				for(var i = 0; i < ca.length; i++) {
+					var c = ca[i].trim();
+					if(c.indexOf(name) == 0) {
+						return c.substring(name.length, c.length);
+					}
+				}
+				return "";
+			}
+
+			function checkCookie() {
+				var user = getCookie("username");
+				if(user != "") {
+					console.log("继续使用")
+				} else {
+					mui.openWindow({
+						url: 'login.html',
+						id: 'login.html',
+						extras: {
+							//自定义扩展参数，可以用来处理页面间传值
+						},
+					})
+				}
+			}
+		</script>
+		<!--动画效果插件css-->
+		<link rel="stylesheet" type="text/css" href="css/animate.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/leaflet.css" />
+
+		<title>airC</title>
+		<style>
+			html,
+			body {
+				margin: 0;
+				/*padding: 0;*/
+			}
+			
+			html {
+				font-size: 62.5%;
+			}
+			
+			.legend {
+				line-height: 18px;
+				color: #555;
+			}
+			
+			.legend i {
+				width: 18px;
+				height: 18px;
+				float: left;
+				margin-right: 8px;
+				opacity: 0.7;
+			}
+			
+			.mui-bar-nav {
+				background-color: #000000;
+				height: 5rem;
+				color: white;
+				/*font-size: 1.5rem;*/
+				/*padding-top: 1.5rem;*/
+			}
+			
+			.mui-backdrop-action.mui-backdrop.mui-active,
+			.mui-bar-backdrop.mui-backdrop.mui-active {
+				opacity: 0;
+			}
+			
+			header {
+				width: 100%;
+				position: absolute;
+				z-index: 5;
+				top: 0;
+			}
+			
+			#main {
+				background: ;
+				width: 100%;
+				/*overflow: auto;*/
+				top: 5rem;
+				position: absolute;
+				bottom: 0rem;
+			}
+			
+			footer {
+				height: 4rem;
+				line-height: 4rem;
+				background: yellow;
+				width: 100%;
+				position: absolute;
+				z-index: 200;
+				bottom: 0;
+				text-align: center;
+			}
+			
+			#jinggaoDivul::-webkit-scrollbar {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body onload="checkCookie()">
+		<header class="mui-bar mui-bar-nav">
+			<button onclick="weatherBtn()" type="button" class="btn btn-primary btn-lg active"><span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>天气</button>
+			<button onclick="ajax()" type="button" class="btn btn-primary btn-lg active"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>加载</button>
+			<button onclick="startClk()" type="button" class="btn btn-primary btn-lg active"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 绘制</button>
+			<!--<button onclick="xiugaiClk()" type="button" class="btn btn-primary btn-lg active"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 修改</button>-->
+			<button onclick="saveClk()" type="button" class="btn btn-primary btn-lg active"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> 保存</button>
+			<button onclick="delClk()" type="button" class="btn btn-primary btn-lg active"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 删除轨迹</button>
+			<button onclick="qingkongClk()" type="button" class="btn btn-primary btn-lg active"><span class="glyphicon glyphicon-inbox" aria-hidden="true"></span> 清空地图</button>
+			<!--<button onclick="clear_cloud()" type="button" class="btn btn-primary btn-lg active"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> clear_cloud</button>-->
+			<div class="tabDiv" onclick="floatWebview()" style="float:right;padding:0px  2rem;border-left:1px solid #CCCCCC ;">
+				<span style="" class="mui-icon mui-icon-contact" style=""></span>
+			</div>
+		</header>
+
+		<div id="main">
+			<div id="" style="position: fixed;bottom: 30%;left: 1%;background:;z-index: 9999;">
+				<button style="border-radius:50% ;" onclick="back_center()" type="button" class="btn btn-primary btn-lg active glyphicon glyphicon-flag"></button>
+			</div>
+			<!--地图-->
+			<div class="leftDiv" style="height: 70%;width: 100%;">
+				<div class="topDiv" style="height: 100%;width: 100%;border: 1px solid white;">
+					<div id="mapid" style=" width:80%; height:100%;position: relative;float: left;">
+						<div id="" style="z-index: 9999; position: absolute;bottom: 0px;right: 0px;background: #CCCCCC;padding: 0px 3px;">
+							Control App
+						</div>
+					</div>
+
+					<!--右侧-->
+					<div class="rightDiv" style="padding-top:0.5rem;height: 100%;width: 20%;float: left;background: black;border-left: 1px solid white;">
+						<div class="" style="height: 6%;width: 100%;background:;color: white;padding-left: 10px;">
+							<label id="">
+						选择轨迹：				
+							</label>
+							<select class="selectLine" style="width: 100px; background:;color: black;">
+							</select>
+						</div>
+						<div class="" style="height: 6%;width: 100%;background:;color: white; margin-top: 1.5rem; padding-left: 10px;">
+							<label id="">
+						选择模式：				
+							</label>
+							<select class="type_plane" style="width: 100px; background:;color: black;">
+								<option value="1">飞行模式</option>
+								<option value="2">仪表模式</option>
+
+							</select>
+						</div>
+						<div class="" style="height: 6%;width: 100%;background: ;padding-left: 10px;">
+							<div class="" style="padding-top:1.5rem;height: 10%;width: 100%;background:;color: white;line-height: 40px;">
+								<div style="float: left;">
+									<label for="">选择机型：</label>
+
+								</div>
+								<div class="planeType" onclick="planeType()" style="width: 100px;height: 40px;margin-left:4px;padding-left:15px;float: left; background: white;color: black;border-radius: 3px;">
+									暂无机型
+								</div>
+							</div>
+						</div>
+						<div id="" style="height: 5%;">
+
+						</div>
+						<div class="" style="height: 10%; padding: 1rem 1rem 1rem 1rem;">
+							<button type="button" style="width: 100%;" onclick="flyClk()" class="btn btn-primary btn-lg active">起飞</button>
+						</div>
+						<div class="" style="width: 100%;height: 60%;background:;">
+							<div id="" style="width: 97%;height: 10%; background: #dd524d;border-radius:;margin:0px auto ; margin-top:2.5rem;text-align: center;line-height: 5%;position: relative;">
+								报警信息<span style="color: #AAAAAA;" class="mui-icon mui-icon-paperclip"></span>
+								<!--<span id="qingchuDOM" style="position: absolute;bottom: 0.3rem;right: 2px;font-size: 1rem;">
+									清空
+								</span>-->
+								<!--<span id="qingchuDOM" style="position: absolute;top: -0.2rem;right: 2px;font-size:2rem ;" class="mui-icon mui-icon-trash"></span>-->
+							</div>
+							<div id="jinggaoDivul" style="width: 100%;height: 100%;background: ;overflow: scroll;padding:15px 3px 0px 3px;">
+								<ul class="mui-table-view jinggaolaba" id="jinggaoDiv" style="height: ;background: ;">
+									<!--<li class="mui-table-view-cell mui-collapse animated flash">
+										<a class="mui-navigate-right" href="#">禁飞区！</a>
+										<div class="mui-collapse-content">
+											<button type="button" class="mui-btn mui-btn-danger mui-btn-outlined ">
+												显示
+												<img width="20" src="img/marker-icon.png"/>
+											</button>
+											<div id="audioDiv" style="height: 100%;display: inline-block;margin-top: 0.3rem ;margin-left: 3rem;">
+												<audio src="9585.mp3" id="aud"></audio>
+												<img src="img/audiox.png" class="img" id="playpause" onclick="startPlay()" />
+											</div>
+
+										</div>
+									</li>-->
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="echart" style="width:;height: 30%;">
+
+			</div>
+		</div>
+	</body>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/leaflet.js"></script>
+	<!--leaflet的点选编辑插件-->
+	<script src="js/Leaflet.Editable.js"></script>
+	<!--leaflet的移动插件-->
+	<script src="js/MovingMarker.js"></script>
+
+	<script src="js/leaflet.latlng-graticule.js"></script>
+	<!--echart图表-->
+	<script src="js/echarts.min.js"></script>
+	<!--全局变量-->
+	<script src="js/cookies.js"></script>
+
+	<script type="text/javascript">
+		mui.init({
+			keyEventBind: {
+				backbutton: false //关闭back按键监听1111111111
+			}
+		});
+		var UserPhone = localStorage.getItem('UserPhone');
+		var ipAddress = localStorage.getItem('ipAddress');
+		ipAddress = JSON.parse(ipAddress)
+		console.log(UserPhone);
+	</script>
+	<script type="text/javascript">
+		$('#qingchuDOM,.mui-icon-trash').on('click', function() {
+			$("#jinggaoDiv").empty();
+		})
+
+		function Popover_2Mask() {
+			mui('#Popover_2').popover('hide');
+		}
+
+		//测试1
+		function xiugaiClk() {
+			line.enableEdit();
+		}
+
+		//清除
+
+		function qingkongClk() {
+
+			if(positionA !== null) {
+				positionA.remove();
+			}
+			map.removeLayer(line);
+			$('#jinggaoDiv').html('');
+			chart()
+			line = null;
+			pointsLine = [];
+			localStorage.setItem('planeline', '');
+		}
+
+		function clear_cloud() {
+			localStorage.removeItem('cloud_data');
+		}
+
+		function clearStorageClk() {
+			if(positionA !== null) {
+				positionA.remove();
+			}
+			$(".selectLine").empty();
+			localStorage.removeItem('lineArrStorage');
+			localStorage.removeItem('planeType');
+			localStorage.removeItem('planeline');
+			localStorage.removeItem('userinfo');
+		}
+	</script>
+	<!--用户中心1-->
+	<script type="text/javascript">
+		var floatw = null //个人中心按钮1111111
+
+		function floatWebview() {
+			if(floatw) { // 避免快速多次点击创建多个窗口1
+				return;
+			}
+			floatw = plus.webview.create("mask.html", "mask.html", {
+				width: '400px',
+				height: '500px',
+				margin: "auto",
+				background: "rgba(0,0,0,0.6)",
+				scrollIndicator: 'none',
+				scalable: false,
+				popGesture: 'none'
+			});
+			floatw.addEventListener("loaded", function() {
+				floatw.show('fade-in', 200);
+				floatw = null;
+			}, false);
+		}
+
+		//起飞去1
+		function flyClk() {
+			var flag = ''
+			if($(".type_plane").val() == 1) {
+				flag = true
+			} else {
+				flag = false
+			}
+
+			//			var linepoints = line._latlngs
+			console.log(line._latlngs);
+			if(JSON.parse(localStorage.getItem('planeType')) == '' || JSON.parse(localStorage.getItem('planeType')) == null) {
+				mui.toast("请选择飞行型号")
+			} else {
+				if(line == null) {
+					mui.toast("请选择轨迹再起飞")
+				} else {
+					var str = '';
+
+					for(var key in line._latlngs) {
+						if(key == 0) {
+							var cmd = 'TAKEOFF';
+						} else if(key == line._latlngs.length - 1) {
+							var cmd = "LAND";
+						} else {
+							var cmd = "WAYPOINT";
+						}
+
+						str += cmd + ',0' + ',' + line._latlngs[key].lat + ',' + line._latlngs[key].lng + ',0' + ',0' + ',0' + ',0|';
+					}
+
+					//linepoints= JSON.stringify(linepoints)
+					console.log(str)
+					Date.prototype.Format = function(fmt) { // author: meizz
+						var o = {
+							"M+": this.getMonth() + 1, // 月份
+							"d+": this.getDate(), // 日
+							"h+": this.getHours(), // 小时
+							"m+": this.getMinutes(), // 分
+							"s+": this.getSeconds(), // 秒
+							"q+": Math.floor((this.getMonth() + 3) / 3), // 季度
+							"S": this.getMilliseconds() // 毫秒
+						};
+						if(/(y+)/.test(fmt))
+							fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+						for(var k in o)
+							if(new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+						return fmt;
+					}
+					var begintime = new Date().Format("yyyy-MM-dd-hh-mm-ss")
+					var record_id = (new Date()).valueOf();
+					var dataPost = {
+						userPhone: UserPhone,
+						record_id: record_id,
+						record_name: '',
+						pathList: str,
+						begintime: 'flylog-'+localStorage.getItem("UserPhone")+'-'+begintime,
+						flag: flag,
+					}
+					//					mui.openWindow({
+					//						url: "flypage3.html",
+					//						id: "flypage3.html",
+					//						extras: {
+					//							record_id: record_id //删除》。》》》》》》》》》》》》》》》》》》》》》111111s111111111
+					//						}1
+					//					});
+					console.log(dataPost)
+					$.ajax({
+						type: "post",
+						url: "http://" + ipAddress + "/api/Values/StartFly",
+						contentType: 'application/json',
+						data: JSON.stringify(dataPost),
+						success: function(data, status) {
+							console.log("xxxxxxx")
+							console.log(data)
+							if(data == true) {
+								mui.openWindow({
+									url: "flypage3.html",
+									id: "flypage3.html",
+									extras: {
+										record_id: record_id, //扩展参数111
+										begintime: 'flylog-'+localStorage.getItem("UserPhone")+'-'+begintime
+									}
+								});
+							}
+
+						}
+					});
+
+				}
+			}
+
+		}
+
+		function planeType() {
+
+			window.location.href = 'planeType.html';
+
+		}
+	</script>
+	<script type="text/javascript">
+		var relativePath = "_downloads/";
+						var sd_path = plus.io.convertLocalFileSystemURL(relativePath);
+
+		//		获取地理位置center
+		var my_center = [];
+		var my_center_img;
+
+		var map = L.map('mapid', {
+			editable: true,
+			center: [34.76765, 113.65978], //郑州
+			zoom: 11,
+		});
+
+//		L.tileLayer('http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png', { //pc测试11111111
+								L.tileLayer(sd_path + '/hybrid/{z}/{x}/{y}.jpg', { //ipad
+			minZoom: 4,
+			maxZoom: 11,
+			id: 'mapbox.streets',
+		}).addTo(map);
+
+		function back_center() {
+			plus.geolocation.getCurrentPosition(function(p) {
+				console.log('纬度:' + p.coords.latitude + '经度:' + p.coords.longitude + '高度:' + p.coords.altitude);
+				my_center.push(p.coords.latitude)
+				my_center.push(p.coords.longitude)
+				console.log(my_center)
+				if(my_center_img == null) {
+					my_center_img = L.marker([p.coords.latitude, p.coords.longitude], {
+						icon: L.icon({
+							iconUrl: 'img/center.png',
+							iconSize: [30, 30], // size of the icon
+						}),
+						zIndexOffset: 999,
+					}).addTo(map)
+					map.panTo(my_center_img.getLatLng())
+				} else {
+					my_center_img.remove();
+					my_center_img = null;
+
+					plus.geolocation.getCurrentPosition(function(p) {
+						console.log('纬度:' + p.coords.latitude + '经度:' + p.coords.longitude + '高度:' + p.coords.altitude);
+
+						my_center_img = L.marker([p.coords.latitude, p.coords.longitude], {
+							icon: L.icon({
+								iconUrl: 'img/center.png',
+								iconSize: [30, 30], // size of the icon
+							}),
+							zIndexOffset: 999,
+						}).addTo(map)
+						map.panTo(my_center_img.getLatLng())
+
+					});
+
+				}
+			});
+		}
+
+		//		var imgArr_zoom = [];//机场
+		//		var png_zoom1 = L.marker([34.76765, 113.65978], {
+		//			icon: L.icon({
+		//				iconUrl: 'img/ZBAA-2B-1.png',
+		//				iconSize: [100, 100], // size of the icon
+		//			})
+		//		}).addTo(map);
+		//		imgArr_zoom.push(png_zoom1);
+		//		var png_zoom2 = L.marker([35.76765, 114.65978], {
+		//			icon: L.icon({
+		//				iconUrl: 'img/ZBAA-9A-1.png',
+		//				iconSize: [100, 100], // size of the icon
+		//			})
+		//		}).addTo(map);
+		//		imgArr_zoom.push(png_zoom2);
+		//		var myGroup = L.layerGroup(imgArr_zoom);
+		//		map.addLayer(myGroup);
+
+		//		map.on('zoomend', function(e) {
+		//			console.log(e.target._zoom)
+		//			if(e.target.getZoom() <= 10 && e.target.getZoom() >= 7) {
+		//				myGroup = L.layerGroup(imgArr_zoom);
+		//				map.addLayer(myGroup);
+		//			} else {
+		//				myGroup.clearLayers();
+		//			}
+		//
+		//		});
+
+		//http://192.168.0.112:8017/api/Values/GeWeatherData 
+		//		http://101.201.105.176:8015/api/AirInfo/GetAirInfo
+
+		mui.get('http://101.201.105.176:8015/api/AirInfo/GetAirInfo', {
+			"UserPhone": UserPhone,
+		}, function(data) {
+			console.log(data)
+			point(data)
+		}, 'json');
+
+		//		mui.ajax('http://101.201.105.176:8015/api/AirInfo/GetAirInfo', {
+		//			data: {
+		//				"UserPhone": UserPhone,
+		//				//		password: 'password'
+		//			},
+		//			dataType: 'json', //服务器返回json格式数据1
+		//			type: 'get', //HTTP请求类型
+		//			timeout: 10000, //超时时间设置为10秒；
+		//			headers: {
+		//				'Content-Type': 'application/json'
+		//			},
+		//			success: function(data) {
+		//				//服务器返回响应，根据响应结果，分析是否登录成功；1111
+		//				console.log(data)
+		//				point(data)
+		//			},
+		//			error: function(data) {
+		//				//异常处理；
+		//				console.log(data);
+		//				mui.ajax('http://101.201.105.176:8015/api/AirInfo/GetAirInfo', {
+		//					data: {
+		//						"UserPhone": UserPhone,
+		//						//password: 'password'
+		//					},
+		//					dataType: 'json', //服务器返回json格式数据
+		//					type: 'get', //HTTP请求类型
+		//					timeout: 10000, //超时时间设置为10秒；
+		//					headers: {
+		//						'Content-Type': 'application/json'
+		//					},
+		//					success: function(data) {
+		//						//服务器返回响应，根据响应结果，分析是否登录成功；
+		//						console.log(data)
+		//						point(data)
+		//					},
+		//					error: function(data) {
+		//						//异常处理；
+		//						mui.toast("空域信息加载失败")
+		//					}
+		//				});
+		//			}
+		//		});
+		var yin = null,
+			sun = null,
+			yu = null,
+			feng = null;
+
+		function weatherBtn() {
+			if(yin != null) {
+				yin.remove();
+				sun.remove();
+				yu.remove();
+			}
+			Addwangge() //网格
+
+			mui.ajax('http://' + ipAddress + '/api/Values/GetWeatherData', {
+				data: {
+					//		username: 'username',
+					//		password: 'password'
+				},
+				dataType: 'json', //服务器返回json格式数据
+				type: 'get', //HTTP请求类型
+				timeout: 10000, //超时时间设置为10秒；
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				success: function(data) {
+					//服务器返回响应，根据响应结果，分析是否登录成功；
+					console.log(data);
+					for(var i in data) {
+						if(data[i].weather == '雨') {
+							console.log(data[i]);
+							yuWeather(data[i])
+						} else if(data[i].weather == '晴') {
+							console.log(data[i].weather);
+							sunWeather(data[i])
+						} else if(data[i].weather == '阴') {
+							console.log(data[i]);
+							yinWeather(data[i])
+						}
+						if(data[i].windspeed) {
+							fengWeather(data[i])
+						}
+					}
+				},
+				error: function(data) {
+					//异常处理；
+					console.log(data);
+
+				}
+			});
+		}
+
+		//网格
+		function Addwangge() {
+			L.latlngGraticule({
+				showLabel: true,
+				zoomInterval: [{
+						start: 2,
+						end: 2,
+						interval: 1
+					},
+					{
+						start: 3,
+						end: 3,
+						interval: 1
+					},
+					{
+						start: 4,
+						end: 4,
+						interval: 1
+					},
+					{
+						start: 5,
+						end: 7,
+						interval: 1
+					},
+					{
+						start: 8,
+						end: 30,
+						interval: 1
+					}
+				]
+			}).addTo(map);
+		}
+
+		function fengWeather(data) {
+			feng = L.icon({
+				iconUrl: 'img/weatherFeng.png',
+				iconSize: [30, 30], // size of the icon
+			});
+			L.marker([data.lat - 0.1, data.lng + 0.3], {
+				icon: feng
+			}).addTo(map);
+		}
+
+		function yinWeather(data) {
+			yin = L.icon({
+				iconUrl: 'img/weatherYin.png',
+				iconSize: [30, 30], // size of the icon
+			});
+			L.marker([data.lat - 0.1, data.lng + 0.1], {
+				icon: yin
+			}).addTo(map);
+		}
+
+		function sunWeather(data) {
+			sun = L.icon({
+				iconUrl: 'img/weatherSun.png',
+				iconSize: [30, 30], // sizse of the icon
+			});
+			L.marker([data.lat - 0.1, data.lng + 0.1], {
+				icon: sun
+			}).addTo(map);
+		}
+
+		function yuWeather(data) {
+			yu = L.icon({
+				iconUrl: 'img/weatherYu.png',
+				iconSize: [30, 30], // size of the icon
+			});
+			L.marker([data.lat - 0.1, data.lng + 0.1], {
+				icon: yu
+			}).addTo(map);
+		}
+
+		//	重新加载
+		function ajax() {
+			location.reload();
+		}
+
+		var line = null; //全局轨迹
+
+		//开始绘制
+		function startClk() {
+			$('#jinggaoDiv').html('');
+			localStorage.setItem('lineBool', 'false');
+			pointsLine = [];
+			data = [];
+//			chart()
+			if(line != null) {
+				map.removeLayer(line);
+			}
+			line = map.editTools.startPolyline();
+		}
+
+		//删除轨迹
+		function delClk() {
+			var lineHisHtml = JSON.parse(localStorage.getItem('lineArrStorage'));
+			for(var i in lineHisHtml) {
+				if($(".selectLine").val() == lineHisHtml[i].name) {
+					if(line != null) {
+						map.removeLayer(line);
+					}
+					lineHisHtml.splice(i, 1);
+					$("option[value='" + $(".selectLine").val() + "']").remove();
+					localStorage.setItem('lineArrStorage', JSON.stringify(lineHisHtml));
+				}
+			}
+		}
+
+		function audioFn1() {
+			var aud = document.getElementById("aud");
+			var img = document.getElementById("playpause");
+			var im = document.getElementsByClassName("img");
+			aud.play();
+			$(".jinggaolaba #audioDiv img").click(function(index) {
+				aud.play();
+				aud.addEventListener("play", function(e) {
+					img.src = "img/audio.gif";
+				}, false);
+				aud.addEventListener("pause", function(e) {
+					img.src = "img/audiox.png";
+				}, false);
+			})
+			img.onclick = function() {
+				//  if (aud.paused) {
+				aud.play();
+				//  } else {
+				//      aud.pause();
+				//  }
+			}
+			aud.addEventListener("play", function(e) {
+				img.src = "img/audio.gif";
+			}, false);
+			aud.addEventListener("pause", function(e) {
+				img.src = "img/audiox.png";
+			}, false);
+
+		}
+
+		function audioFn() {
+			var aud = document.getElementById("aud");
+			aud.play();
+		}
+
+		function warn(lat, lnt) {
+			//			var relativePath1 = localStorage.getItem('stopWarnRecord1');1
+			//			var sd_path1 = plus.io.convertLocalFileSystemURL(relativePath1);
+			var sd_path1 = 'warn.mp3';
+			console.log(sd_path1)
+			var html = '<li class="mui-table-view-cell mui-collapse animated flash">' +
+				'<a class="mui-navigate-right" href="#">禁飞信息！</a>' +
+				'<div class="mui-collapse-content">' +
+				'<button onclick="positionClk(' + lat + ',' + lnt + ')" type="button" class="mui-btn mui-btn-danger mui-btn-outlined">' +
+				'位置<img width="20" src="img/marker-icon.png"/>' +
+				'</button>' +
+				'<div id="" style="height: 100%;display: inline-block;margin-top: 0.3rem ;margin-left: 3rem;">' +
+				'<audio src="' + sd_path1 + '" id="aud"></audio>' +
+				'<img src="img/audiox.png" class="img" id="playpause" onclick="audioFn1()"  />' +
+				'</div>' +
+				'</div>' +
+				'</li>';
+			$('#jinggaoDiv').prepend(html);
+			audioFn1()
+		}
+
+		//创建新点111
+		var warnAdd = [];
+
+		function vertexNew(e) {
+			var lineLength = e.layer._latlngs.length;
+			var hh = pointsMath(e.latlng.lng, e.latlng.lat, points());
+			var jj = lineMath(e.latlng.lat, e.latlng.lng);
+			console.log("经纬度")
+			console.log([e.latlng.lat, e.latlng.lng])
+			if(pointsLine.length == 2) {
+				pointsLine.shift()
+			}
+
+			var arrAdd = [];
+			for(var i in line._latlngs) {
+				var pointStorage = [line._latlngs[i].lat, line._latlngs[i].lng];
+				arrAdd.push(pointStorage);
+			}
+			var obj = {};
+			obj.points = arrAdd;
+			console.log("hh" + hh)
+			if(hh == false) { //点的报警
+				warn(e.latlng.lat, e.latlng.lng)
+				warnAdd.push([e.latlng.lat, e.latlng.lng]);
+				obj.warn = warnAdd;
+			}
+			console.log("jj" + jj)
+			if(jj == false) { //线的报警
+				warn(e.latlng.lat, e.latlng.lng)
+				warnAdd.push([e.latlng.lat, e.latlng.lng]);
+				obj.warn = warnAdd;
+			}
+			var xx = localStorage.setItem('planeline', JSON.stringify(obj)); //保存即将飞行的轨迹
+			distanceFun(line);
+		}
+
+		// 加载页面历史到HTML
+		function lineHisHtml() {
+			//	if(JSON.parse(localStorage.getItem('planeType')) == undefined) {
+			var planeTypeHtml = JSON.parse(localStorage.getItem('planeType'));
+			$(".planeType").html(planeTypeHtml);
+			//			}
+			if(JSON.parse(localStorage.getItem('planeline')) !== null) {
+				var lineHtml = JSON.parse(localStorage.getItem('planeline'));
+				line = L.polyline(lineHtml.points).addTo(map); //error报错了
+				line.enableEdit();
+				var arrAdd = [];
+				for(var i in line._latlngs) {
+					var pointStorage = [line._latlngs[i].lat, line._latlngs[i].lng];
+					arrAdd.push(pointStorage);
+				}
+				map.fitBounds(arrAdd); //点击定位line到屏幕中心
+				for(var key in lineHtml.warn) {
+					warn(lineHtml.warn[key][0], lineHtml.warn[key][1])
+				}
+				distanceFun(line)
+				chart(data)
+			}
+			var lineHisHtml = JSON.parse(localStorage.getItem('lineArrStorage'));
+			for(var i in lineHisHtml) {
+				var selectLineHtml = '<option value="' + lineHisHtml[i].name + '">' + lineHisHtml[i].name + '</option>';
+				$(".selectLine").append(selectLineHtml);
+			}
+		}
+
+		var positionA = null; //禁飞区点标记
+		function positionClk(lat, lnt) {
+			if(positionA == null) {
+				positionA = L.marker([lat, lnt], {
+						zIndexOffset: 999,
+					}).addTo(map).bindPopup('坐标' + lat + ',' + lnt)
+					.openPopup();;
+			}
+			if(positionA !== null) {
+				positionA.remove();
+				positionA = null;
+				positionA = L.marker([lat, lnt], {
+						zIndexOffset: 999,
+					}).addTo(map).bindPopup('坐标' + lat + ',<br/>' + lnt)
+					.openPopup();;
+			}
+
+		}
+
+		function clearPosition() {
+			console.log(positionA);
+
+			//			if(positionA!==null)
+		}
+
+		//		绘制天气图标
+		//		var greenIcon = L.icon({
+		//			iconUrl: '1.png',
+		//			//  shadowUrl: 'leaf-shadow.png',
+		//
+		//			iconSize: [38, 95], // size of the icon
+		//			shadowSize: [50, 64], // size of the shadow
+		//			iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+		//			shadowAnchor: [4, 62], // the same for the shadow
+		//			popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+		//		});
+		//
+		//		L.marker([39, 116], {
+		//			icon: greenIcon
+		//		}).addTo(map);
+
+		function selectLineFn() {
+			$(".selectLine").click(function() {
+				$('#jinggaoDiv').html('');
+				localStorage.setItem('lineBool', 'true');
+				var lineHisHtml = JSON.parse(localStorage.getItem('lineArrStorage'));
+				for(var i in lineHisHtml) {
+					if($(this).val() == lineHisHtml[i].name) {
+						if(line != null) {
+							map.removeLayer(line);
+						}
+						var planeLine = localStorage.setItem('planeline', JSON.stringify(lineHisHtml[i])); //保存即将飞行的轨迹
+						map.fitBounds(lineHisHtml[i].points); //点击定位line到屏幕中心
+						line = L.polyline(lineHisHtml[i].points).addTo(map);
+						line.enableEdit();
+						distanceFun(line)
+						console.log(lineHisHtml[i].warn)
+						for(var key in lineHisHtml[i].warn) {
+							warn(lineHisHtml[i].warn[key][0], lineHisHtml[i].warn[key][1])
+						}
+					}
+				}
+			})
+		}
+
+		var marker; //模拟飞行全局变量
+
+		function moniClk() {
+			if(line == null) {
+				mui.toast("请绘制轨迹")
+			} else {
+				marker = L.Marker.movingMarker(line._latlngs, [3000, 1000, 9000, 4000, 9000, 9000, 9000, 9000], {
+					autostart: true
+				}).addTo(map);
+				marker.on('end', function() {
+					marker.remove();
+				});
+			}
+		}
+
+		var bool = true; //飞行判断变量
+		function stopClk() {
+			if(bool == true) {
+				marker.pause();
+				$("#bool").html("开始模拟");
+				bool = false;
+			} else {
+				marker.start();
+				$("#bool").html("停止模拟");
+				bool = true;
+			}
+		}
+
+		//保存去
+		function saveClk() {
+			if(line !== null) {
+				if(JSON.parse(localStorage.getItem('lineBool')) == true) { //历史轨迹保存
+					var name = $(".selectLine").val();
+					var btnArray = ['否', '是'];
+					mui.confirm('航迹名称:' + '"' + name + '"', '保存', btnArray, function(e) {
+						if(e.index == 1) {
+							var arrAdd = [];
+							for(var i in line._latlngs) {
+								var pointStorage = [line._latlngs[i].lat, line._latlngs[i].lng];
+								arrAdd.push(pointStorage);
+							}
+
+							var lineHis = JSON.parse(localStorage.getItem('lineArrStorage'));
+							for(var key in lineHis) {
+								if(lineHis[key].name == name) {
+									lineHis[key].points = arrAdd;
+									lineHis[key].warn = warnAdd; //保存报警信息
+								}
+							}
+							localStorage.setItem('lineArrStorage', JSON.stringify(lineHis));
+							mui.toast("已保存航迹")
+						}
+					})
+				}
+
+				if(JSON.parse(localStorage.getItem('lineBool')) == false) { //新的轨迹保存
+					var lineHis = JSON.parse(localStorage.getItem('lineArrStorage')); //获取存储的轨迹
+					if(lineHis == null) {
+						var lineHis = [];
+					}
+					if(line._latlngs.length !== 1) {
+						var btnArray = ['取消', '确定'];
+						mui.prompt('请输入航迹名称：', '名称...', '保存', btnArray, function(e) {
+							if(e.index == 1) {
+								var arrAdd = [];
+								for(var i in line._latlngs) {
+									var pointStorage = [line._latlngs[i].lat, line._latlngs[i].lng];
+									arrAdd.push(pointStorage);
+								}
+								var obj = {};
+								obj.name = e.value; //保存信息
+								obj.points = arrAdd;
+								obj.warn = warnAdd;
+								lineHis.push(obj);
+								localStorage.setItem('lineArrStorage', JSON.stringify(lineHis));
+								warnAdd = [];
+								var selectLineHtml = '<option value="' + e.value + '">' + e.value + '</option>';
+								$(".selectLine").append(selectLineHtml);
+								selectLineFn();
+								map.editTools.stopDrawing();
+								mui.toast("已保存航迹")
+							} else {
+								mui.toast("未输入名称")
+							}
+						})
+					}
+				}
+			} else {
+				mui.toast("请先绘制轨迹")
+			}
+		}
+
+		//用户拖动后触发1
+		function vertexdragend(e) {
+			$("#jinggaoDiv").empty();
+			warnAdd = [];
+			if(positionA !== null) {
+				positionA.remove();
+			}
+			pointsLine = [];
+			var num = null;
+			var arr = [];
+			console.log(e)
+			for(var key in e.vertex.latlngs) {
+				if(e.vertex.latlng.lat == e.vertex.latlngs[key].lat && e.vertex.latlng.lng == e.vertex.latlngs[key].lng) {
+					num = key;
+				}
+
+				if(pointsMath(e.vertex.latlngs[key].lng, e.vertex.latlngs[key].lat, points()) == false) {
+					warn(e.vertex.latlngs[key].lat, e.vertex.latlngs[key].lng)
+					warnAdd.push([e.vertex.latlngs[key].lat, e.vertex.latlngs[key].lng]);
+				}
+			}
+
+			if(num >= 1) {
+				var before = e.vertex.latlngs[Number(num) - Number(1)];
+				arr.push(before);
+			}
+			var mid = e.vertex.latlngs[num];
+			arr.push(mid);
+			if(num < e.vertex.latlngs.length - 1) {
+				var after = e.vertex.latlngs[Number(num) + Number(1)];
+				arr.push(after);
+			}
+			console.log(arr)
+			for(var key in arr) {
+				var jj = lineMath(arr[key].lat, arr[key].lng);
+				if(jj == false) {
+					warn(arr[key].lat, arr[key].lng)
+					warnAdd.push([arr[key].lat, arr[key].lng]);
+				}
+				if(pointsLine.length == 2) {
+					pointsLine.shift()
+				}
+			}
+			var arrAdd = [];
+			for(var i in line._latlngs) {
+				var pointStorage = [line._latlngs[i].lat, line._latlngs[i].lng];
+				arrAdd.push(pointStorage);
+			}
+			var obj = {};
+			obj.points = arrAdd;
+			obj.warn = warnAdd;
+			var xx = localStorage.setItem('planeline', JSON.stringify(obj)); //保存即将飞行的轨迹
+			distanceFun(line)
+		}
+
+		var data = []; //echart 全局数据
+		var distancePointAdd = 0; //echart 坐标的距离变量
+		//点坐标距离
+		function distanceFun(line) {
+			distancePointAdd = 0;
+			data = [
+				[distancePointAdd, 0]
+			];
+
+			for(var key = 0; key < line._latlngs.length - 1; key++) {
+				var distancePoint = map.distance(line._latlngs[key], line._latlngs[Number(key) + Number(1)]);
+				distancePointAdd += distancePoint;
+				var arr = [distancePointAdd, 5500]; //[距离,高度]
+
+				data.push(arr);
+			}
+			data[data.length - 1][1] = 0;
+			chart(data);
+		}
+
+		function VertexEvent(e) {
+			//			console.log(e);
+			//			console.log(line);
+		}
+
+		//删除点
+		function vertexDel(e) {
+
+			$("#jinggaoDiv").empty();
+			warnAdd = [];
+			if(positionA !== null) {
+				positionA.remove();
+			}
+			pointsLine = [];
+			var num = null;
+			var arr = [];
+			console.log(e)
+			for(var key in e.vertex.latlngs) {
+				if(e.vertex.latlng.lat == e.vertex.latlngs[key].lat && e.vertex.latlng.lng == e.vertex.latlngs[key].lng) {
+					num = key;
+				}
+				console.log(e.vertex.latlngs[key].lng)
+				if(pointsMath(e.vertex.latlngs[key].lng, e.vertex.latlngs[key].lat, points()) == false) {
+					warn(e.vertex.latlngs[key].lat, e.vertex.latlngs[key].lng)
+					warnAdd.push([e.vertex.latlngs[key].lat, e.vertex.latlngs[key].lng]);
+					//				obj.warn = warnAdd;
+				}
+			}
+
+			if(num >= 1) {
+				var before = e.vertex.latlngs[Number(num) - Number(1)];
+				arr.push(before);
+			}
+			var mid = e.vertex.latlngs[num];
+			arr.push(mid);
+			if(num < e.vertex.latlngs.length - 1) {
+				var after = e.vertex.latlngs[Number(num) + Number(1)];
+				arr.push(after);
+			}
+			console.log(arr)
+			//			for(var key in arr) {
+			//				var jj = lineMath(arr[key].lat, arr[key].lng);
+			//				if(jj == false) {
+			//					warn(arr[key].lat, arr[key].lng)
+			//					warnAdd.push([arr[key].lat, arr[key].lng]);
+			//					//				obj.warn = warnAdd;
+			//				}
+			//				if(pointsLine.length == 2) {
+			//					pointsLine.shift()
+			//				}
+			//			}
+			var arrAdd = [];
+			for(var i in line._latlngs) {
+				var pointStorage = [line._latlngs[i].lat, line._latlngs[i].lng];
+				arrAdd.push(pointStorage);
+			}
+			var obj = {};
+			obj.points = arrAdd;
+			obj.warn = warnAdd;
+			var xx = localStorage.setItem('planeline', JSON.stringify(obj)); //保存即将飞行的轨迹
+			distanceFun(line)
+		}
+
+		//		map.on('editable:drawing:start', addTooltip);
+		//		map.on('editable:drawing:end', removeTooltip);
+		//		map.on('editable:drawing:commit', commitDraw); //用户完成绘图功能后触发。 
+		map.on('editable:vertex:new', vertexNew); //当创建新的顶点时触发。
+		map.on('editable:vertex:deleted', vertexDel); //当创建新的顶点时触发。
+		map.on('editable:vertex:drag', VertexEvent); //当用户拖动顶点时触发。
+		map.on('editable:vertex:dragend', vertexdragend); //用户拖动后触发。
+
+		//		绘制禁止飞行图形			
+		function point(data) {
+			var areaPointsArr = [];
+			for(var key in data) {
+				if(data[key]._airlinetype == 1) {
+					var line = data[key]._linegroup.split("|");
+					var arrPloygon = [];
+					var pointsData = [];
+					for(var l = 0; l < line.length; l++) {
+						var rectArr = [];
+						if(line[l] != "") {
+							var lineData = line[l].split(',');
+							rectArr.push(parseFloat(lineData[0]));
+							rectArr.push(parseFloat(lineData[1]));
+							arrPloygon.push(rectArr);
+						}
+					}
+					for(var key in arrPloygon) {
+						pointsData.push({
+							lat: arrPloygon[key][0],
+							lng: arrPloygon[key][1]
+						})
+					}
+					//画多边形
+					L.polygon(pointsData, {
+						color: 'red'
+					}).addTo(map);
+					areaPointsArr.push(pointsData);
+					localStorage.setItem('areaPointsArr', JSON.stringify(areaPointsArr))
+				} else {
+					//画圆1
+					var cirArr = data[key]._linegroup.split(",");
+					L.circle([cirArr[0], cirArr[1]], {
+						color: 'blue',
+						fillColor: 'blue',
+						fillOpacity: 0.3,
+						radius: cirArr[2],
+					}).addTo(map);
+				}
+			}
+		}
+
+		function points() {
+			return JSON.parse(localStorage.getItem('areaPointsArr'))
+		}
+
+		//禁飞区》》》线1
+		var pointsLine = [];
+
+		function lineMath(ALon, ALat) {
+			var point = [];
+			var boolLine1;
+			point = [{
+				lat: ALon
+			}, {
+				lng: ALat
+			}];
+
+			pointsLine.push(point);
+			if(pointsLine.length == 2) {
+				2
+				var a = [{
+					lat: pointsLine[0][0].lat,
+					lng: pointsLine[0][1].lng
+				}];
+
+				var b = [{
+					lat: pointsLine[1][0].lat,
+					lng: pointsLine[1][1].lng
+				}];
+
+				//线》》》循环算法111
+				//			var stopline = [{
+				//					lat: 40.092781012494065,
+				//					lng: 116.13922119140625
+				//				},
+				//				{
+				//					lat: 39.7642140375156,
+				//					lng: 116.16119384765625
+				//				}, {
+				//					lat: 39.91605629078665,
+				//					lng: 116.663818359375
+				//				}, {
+				//					lat: 40.14948820651523,
+				//					lng: 116.4990234375
+				//				}
+				//			];
+				var stoplineArr = JSON.parse(localStorage.getItem('areaPointsArr'));
+				for(var i in stoplineArr) {
+					var stopline = stoplineArr[i];
+					for(var key in stopline) {
+						var c = [{
+							lat: stopline[key].lat,
+							lng: stopline[key].lng
+						}];
+
+						if(key == stopline.length - 1) {
+							var d = [{
+								lat: stopline[0].lat,
+								lng: stopline[0].lng
+							}];
+						} else {
+							var d = [{
+								lat: stopline[Number(key) + Number(1)].lat,
+								lng: stopline[Number(key) + Number(1)].lng
+							}];
+						}
+
+						var k1 = (b[0].lng - a[0].lng) / (b[0].lat - a[0].lat)
+						var k2 = (d[0].lng - c[0].lng) / (d[0].lat - c[0].lat)
+
+						var jiaodianlat = (k1 * a[0].lat - k2 * c[0].lat - a[0].lng + c[0].lng) / (k1 - k2);
+						var jiaodianlng = k1 * jiaodianlat - k1 * a[0].lat + a[0].lng;
+
+						if(k1 !== k2) {
+							if((b[0].lat <= jiaodianlat && jiaodianlat <= a[0].lat || a[0].lat <= jiaodianlat && jiaodianlat <= b[0].lat) && (c[0].lat <= jiaodianlat && jiaodianlat <= d[0].lat || d[0].lat <= jiaodianlat && jiaodianlat <= c[0].lat)) {
+
+								//							pointsLine = pointsLine.pop();
+								pointsLine = [];
+								//							return false;
+								boolLine1 = false;
+							}
+						}
+					}
+				}
+				//			var a = [{
+				//				lat: 40.17258,
+				//				lng: 116.22711
+				//			}];
+				//			var b = [{
+				//				lat: 40.04023,
+				//				lng: 116.53473
+				//			}];
+
+			} else {
+				//				return true
+				boolLine1 = true;
+			}
+			if(boolLine1 == false) {
+				return false;
+			} else {
+				return true
+			}
+		}
+
+		//禁飞区》》》点1
+		function pointsMath(ALon, ALat, APoints) {
+			var iSum = 0,
+				iCount;
+			console.log(APoints)
+			var dLon1, dLon2, dLat1, dLat2, dLon;
+			for(var key in APoints) {
+
+				if(APoints[key].length < 3) return false;
+				iCount = APoints[key].length;
+				for(var i = 0; i < iCount; i++) {
+					if(i == iCount - 1) {
+						dLon1 = APoints[key][i].lng;
+						dLat1 = APoints[key][i].lat;
+						dLon2 = APoints[key][0].lng;
+						dLat2 = APoints[key][0].lat;
+					} else {
+						dLon1 = APoints[key][i].lng;
+						dLat1 = APoints[key][i].lat;
+						dLon2 = APoints[key][i + 1].lng;
+						dLat2 = APoints[key][i + 1].lat;
+					}
+					//以下语句判断A点是否在边的两端点的水平平行线之间，在则可能有交点，开始判断交点是否在左射线上  
+					if(((ALat >= dLat1) && (ALat < dLat2)) || ((ALat >= dLat2) && (ALat < dLat1))) {
+						if(Math.abs(dLat1 - dLat2) > 0) {
+							//得到 A点向左射线与边的交点的x坐标：  
+							dLon = dLon1 - ((dLon1 - dLon2) * (dLat1 - ALat)) / (dLat1 - dLat2);
+							if(dLon < ALon)
+								iSum++;
+						}
+					}
+				}
+
+			}
+			if(iSum % 2 != 0)
+				return false;
+			return true;
+		}
+	</script>
+	<script type="text/javascript">
+		var data1 = [
+			//			[0, Math.random() * 1850 + 150],
+			//				[120000, Math.random() * 5000],
+			//				[180000, Math.random() * 5000],
+			//				[190000, Math.random() * 5000],
+			//				[400000, Math.random() * 5000],
+			//				[500000, Math.random() * 5000],
+			//				[600000, Math.random() * 5000],
+			//				[700000, Math.random() * 5000],
+			//				[800000, Math.random() * 5000],
+			//				[900000, Math.random() * 5000],
+		];
+
+		//		var i = 0;
+		//		for(var key = 0; key <= 100; key++) {
+		//			i += 2000;
+		//			data1.push([i, Math.random() * 1850 + 150])
+		//		}
+		//		chart(data)
+
+		function chart(data) {
+
+			var hight_postdata = JSON.parse(localStorage.getItem('planeline'))
+//			if(hight_postdata == null){
+//				var xx = localStorage.setItem('planeline','11')
+//			}
+			var str = ''
+			for(var key in hight_postdata.points) {
+				str += hight_postdata.points[key][0] + ',' + hight_postdata.points[key][1] + '|'
+			}
+			console.log(str)
+			$.ajax({
+				url: "http://192.168.0.157:8017/api/Values/GetElevation?el=" + str,
+				type: "get",
+				contentType: 'application/json',
+				success: function(res) {
+					console.log("高程数据")
+					console.log('data数据chart')
+					console.log(data)
+					localStorage.setItem('points_data', JSON.stringify(data))
+					var points = data
+					for(var key in points) {
+						points[key][1] = res[key].Alt
+					}
+					console.log(points)
+					localStorage.setItem('points_hight', JSON.stringify(points))
+					if(localStorage.getItem('points_hight') == 'undefined') {
+						return
+					}
+					data1 = JSON.parse(localStorage.getItem('points_hight'))
+
+					var symbolSize = 20;
+					var mydata = JSON.parse(localStorage.getItem('points_data'))
+					//			console.log(data[data.length-1][0])
+					var matadata = 0;
+					if(data == undefined) {
+						matadata = 0;
+					} else {
+						matadata = data[data.length - 1][0];
+					}
+					var myChart = echarts.init(document.getElementById('echart'));
+					var option = {
+						title: {
+							//						text: 'Try Dragging these Points'
+						},
+						backgroundColor: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+								offset: 0,
+								color: 'rgb(23, 153, 240)'
+							},
+							{
+								offset: 0.5,
+								color: '#ffffff'
+							}
+						]),
+						tooltip: {
+							triggerOn: 'none',
+							formatter: function(params) {
+								return 'X: ' + params.data[0].toFixed(2) + '<br>Y: ' + params.data[1].toFixed(2);
+							}
+						},
+						dataZoom: [
+							//									{
+							//										type: 'slider',
+							//										xAxisIndex: 0,
+							//										filterMode: 'empty'
+							//									},
+							//									{
+							//										type: 'slider',
+							//										yAxisIndex: 0,
+							//										filterMode: 'empty'
+							//									},
+							//					{
+							//						type: 'inside',
+							//						xAxisIndex: 0,
+							//						filterMode: 'empty'
+							//					},
+							//					{
+							//						type: 'inside',
+							//						yAxisIndex: 0,
+							//						filterMode: 'empty'
+							//					},
+							//					{
+							//						start: 0,
+							//						end: 100,
+							//						handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+							//						handleSize: '80%',
+							//						handleStyle: {
+							//							color: '#fff',
+							//							shadowBlur: 3,
+							//							shadowColor: 'rgba(0, 0, 0, 0.6)',
+							//							shadowOffsetX: 2,
+							//							shadowOffsetY: 2
+							//						}
+							//					}
+						],
+						grid: {
+							left: '1%',
+							right: '2%',
+							bottom: '20%',
+							top: '5%',
+							borderWidth: 1,
+							containLabel: true
+						},
+						xAxis: {
+							min: 0,
+							max: matadata,
+							splitNumber: 10,
+							type: 'value',
+							splitLine: false,
+							axisLine: {
+								onZero: false
+							}
+						},
+						yAxis: {
+							min: 0,
+							max: 12000,
+							splitNumber: 5,
+							type: 'value',
+							splitLine: false,
+							axisLine: {
+								onZero: true
+							}
+						},
+						series: [{
+								id: 'a',
+								type: 'line',
+								symbolSize: symbolSize, // 为了方便拖拽，把 symbolSize 尺寸设大了。
+								data: mydata,
+								lineStyle: {
+									normal: {
+										width: 10, //宽度线条
+										//								color:'red'
+									}
+								}
+							},
+							{
+								id: 'a1',
+								type: 'line',
+								smooth: true,
+								areaStyle: { //地形图
+									normal: {
+										color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+											offset: 0.4,
+											color: '#00CC66'
+										}, {
+											offset: 0.9,
+											color: '#00CC66'
+										}])
+									}
+								},
+								symbolSize: 1, // 为了方便拖拽，把 symbolSize 尺寸设大了。
+								data: data1
+							},
+							{
+								id: 'img1',
+								type: 'line',
+								smooth: true,
+								symbol: 'image://./img/weatherYu.png',
+								symbolSize: 40, // 为了方便拖拽，把 symbolSize 尺寸设大了。
+								data: [
+									[Math.random() * 100000, 4000]
+								]
+							},
+							{
+								id: 'img2',
+								type: 'line',
+								smooth: true,
+								symbol: 'image://./img/building.png',
+								symbolSize: 40, // 为了方便拖拽，把 symbolSize 尺寸设大了。
+								data: [
+									[Math.random() * 100000, 1750]
+								]
+							},
+							{
+								id: 'img3',
+								type: 'line',
+								smooth: true,
+								symbol: 'image://./img/building.png',
+								symbolSize: 40, // 为了方便拖拽，把 symbolSize 尺寸设大了。
+								data: [
+									[Math.random() * 100000, 1750]
+								]
+							},
+							{
+								id: 'img4',
+								type: 'line',
+								smooth: true,
+								symbol: 'image://./img/Parachute.png',
+								symbolSize: 40, // 为了方便拖拽，把 symbolSize 尺寸设大了。
+								data: [
+									[Math.random() * 100000, 8000]
+								]
+							},
+							{
+								id: 'img5',
+								type: 'line',
+								smooth: true,
+								symbol: 'image://./img/Parachute.png',
+								symbolSize: 40, // 为了方便拖拽，把 symbolSize 尺寸设大了。
+								data: [
+									[Math.random() * 100000, 6000]
+								]
+							},
+							{
+								id: 'img6',
+								type: 'line',
+								smooth: true,
+								symbol: 'image://./img/dashed2.png',
+								symbolSize: 40, // 为了方便拖拽，把 symbolSize 尺寸设大了。
+								data: [
+									[Math.random() * 100000, 6000]
+								]
+							},
+							{
+								id: 'img7',
+								type: 'line',
+								smooth: true,
+								symbol: 'image://./img/dashed2.png',
+								symbolSize: 60, // 为了方便拖拽，把 symbolSize 尺寸设大了。
+								data: [
+									[Math.random() * 100000, 6000]
+								]
+							},
+							{
+								id: 'img8',
+								type: 'line',
+								smooth: true,
+								symbol: 'image://./img/building.png',
+								symbolSize: 40, // 为了方便拖拽，把 symbolSize 尺寸设大了。
+								data: [
+									[Math.random() * 1000000, 1750]
+								]
+							},
+							{
+								id: 'img9',
+								type: 'line',
+								smooth: true,
+								symbol: 'image://./img/Parachute.png',
+								symbolSize: 40, // 为了方便拖拽，把 symbolSize 尺寸设大了。
+								data: [
+									[Math.random() * 1000000, 3500]
+								]
+							}
+						],
+					};
+					myChart.setOption(option)
+					//			if(!app.inNode) {
+					setTimeout(function() {
+						// Add shadow circles (which is not visible) to enable drag.
+						myChart.setOption({
+							graphic: echarts.util.map(mydata, function(item, dataIndex) {
+								return {
+									type: 'circle',
+									position: myChart.convertToPixel('grid', item),
+									shape: {
+										cx: 0,
+										cy: 0,
+										r: symbolSize / 2
+									},
+									invisible: true,
+									draggable: true,
+									ondrag: echarts.util.curry(onPointDragging, dataIndex),
+									onmousemove: echarts.util.curry(showTooltip, dataIndex),
+									onmouseout: echarts.util.curry(hideTooltip, dataIndex),
+									z: 100
+								};
+							})
+						});
+					}, 0);
+					window.addEventListener('resize', updatePosition);
+					//			}
+
+					myChart.on('dataZoom', updatePosition);
+
+					function updatePosition() {
+						myChart.setOption({
+							graphic: echarts.util.map(mydata, function(item, dataIndex) {
+								return {
+									position: myChart.convertToPixel('grid', item)
+								};
+							})
+						});
+					}
+
+					function showTooltip(dataIndex) {
+						myChart.dispatchAction({
+							type: 'showTip',
+							seriesIndex: 0,
+							dataIndex: dataIndex
+						});
+					}
+
+					function hideTooltip(dataIndex) {
+						myChart.dispatchAction({
+							type: 'hideTip'
+						});
+					}
+
+					function onPointDragging(dataIndex, dx, dy) {
+						mydata[dataIndex] = myChart.convertFromPixel('grid', this.position);
+						//				console.log(data)
+						// Update data
+						myChart.setOption({
+							series: [{
+								id: 'a',
+								data: mydata
+							}]
+						});
+
+					}
+				}
+			});
+
+		}
+
+		lineHisHtml()
+		selectLineFn()
+	</script>
+
+</html>

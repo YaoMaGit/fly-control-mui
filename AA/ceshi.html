@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>导出生成json文件和文本</title>
+	</head>
+
+	<body>
+
+	</body>
+	<script>
+		var kml_arr = localStorage.getItem('cloud_data')
+		console.log(kml_arr)
+		if(kml_arr == null) {
+			kml_arr = []
+			kml_arr.push({name:'11',bool:false,})
+			console.log(kml_arr)
+			localStorage.setItem('cloud_data', JSON.stringify(kml_arr))
+		} else {
+			var kml_arr = JSON.parse(localStorage.getItem('cloud_data'))
+			console.log(kml_arr)
+			kml_arr.push({name:'22',bool:false,})
+			localStorage.setItem('cloud_data', JSON.stringify(kml_arr))
+		}
+		var kml_arr2 = localStorage.getItem('cloud_data')
+
+		console.log(kml_arr2)
+	</script>
+
+</html>

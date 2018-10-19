@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/flypage/leaflet.css" />
+		<link rel="stylesheet" href="css/animate.min.css" />
+		<!--仪表盘的插件-->
+		<link rel="stylesheet" type="text/css" href="css/flightindicators.css" />
+		<style>
+			html,
+			body {
+				height: 100%;
+				margin: 0;
+				padding: 0;
+			}
+			
+			.mui-bar-nav {
+				background-color: #000000;
+				height: 8rem;
+				color: white;
+				font-size: 1.5rem;
+				padding-top: 1.5rem;
+			}
+			
+			#main {
+				background: ;
+				width: 100%;
+				overflow: auto;
+				top: 8rem;
+				position: absolute;
+				z-index: 10;
+				bottom: 0rem;
+			}
+			
+			.col-md-1 img {
+				background: black;
+			}
+			
+			.row {
+				margin-right: 0px;
+				margin-left: 0px;
+			}
+			
+			#jinggaoDivul::-webkit-scrollbar {
+				display: none;
+			}
+			
+			#backImg {
+				width: 150rem;
+				height: 150rem;
+				/*background:;*/
+				background: linear-gradient(#000033, white, green);
+				/*-webkit-transform: rotate(-40deg) translateX(-200px);*/
+				position: absolute;
+				bottom: -44rem;
+				left: -30rem;
+			}
+			
+			#d1 {
+				/*background: #0062CC;*/
+				background: linear-gradient(lightskyblue 95%, white);
+			}
+			
+			#d2 {
+				/*background: brown;*/
+				background: linear-gradient(white, green 95%);
+			}
+			
+			#banyuan {
+				position: absolute;
+				top: 13rem;
+				left: 3rem;
+				-webkit-transform: rotate(0deg);
+				-webkit-transform-origin: 50% 124%;
+				/* Safari and Chrome */
+			}
+			
+			#chuizhi {
+				position: absolute;
+				top: -89.3rem;
+				left: 23rem;
+				-webkit-transform: translateY(0px);
+			}
+			
+			#jiaodu {
+				position: absolute;
+				top: 20rem;
+				left: 3rem;
+			}
+			
+			#topImg {
+				position: absolute;
+				top: 0rem;
+				left: -58rem;
+				-webkit-transform: translateX(200px);
+			}
+		</style>
+	</head>
+
+	<body style="">
+		<header class="mui-bar mui-bar-nav">
+			<div class="row">
+				<div class="col-md-1">
+					<span id="backMain" style="color: ;font-size:5rem;" class="mui-icon mui-icon-back"></span>
+				</div>
+				<div class="col-md-1">
+					<button style="margin-top:1.2rem ;" onclick="overClk()" type="button" class="btn btn-primary btn-lg active"><span class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span>结束飞行</button>
+				</div>
+				<div class="col-md-6" style="color: white;font-size: 40px;">
+					<div id="" style="margin-left: 50%;">
+						导航仪
+
+					</div>
+
+				</div>
+				<div class="col-md-2" style="line-height: 7rem;">
+					预测时间:6min
+				</div>
+				<div class="col-md-2" style="line-height: 7rem;">
+					油量:23.5L
+				</div>
+			</div>
+		</header>
+		<div id="main" style="border:1px solid white">
+			<div class="" style="width: 30%;height: 100%;background:black ;float: left;">
+				<div id="" style="width: 97%;height: 3rem; background: #dd524d;margin:3px 3px ;text-align: center;line-height: 3rem;position: relative;">
+					警告信息
+					<span style="color: #AAAAAA;" class="mui-icon mui-icon-paperclip"></span>
+				</div>
+				<div id="jinggaoDivul" style="width: 100%;height: 40%;border-right:0px solid white;padding: 0px 3px; background: black;overflow: scroll;margin-bottom: 0rem;">
+					<ul class="mui-table-view" id="jinggaoDiv0" style="background: ;">
+
+					</ul>
+					<ul class="mui-table-view" id="jinggaoDiv1" style="background: ;">
+						<li class="mui-table-view-cell mui-collapse animated flash">
+							<a class="mui-navigate-right" href="#">高危姿态！</a>
+							<div class="mui-collapse-content">
+								<button type="button" class="mui-btn mui-btn-danger mui-btn-outlined ">
+												显示
+								<img width="20" src="img/marker-icon.png"/>
+								</button>
+								<div id="audioDiv" style="height: 100%;display: inline-block;margin-top: 0.3rem ;margin-left: 3rem;">
+									<audio src="9585.mp3" id="aud"></audio>
+									<img src="img/audiox.png" class="img" id="playpause" onclick="startPlay()" />
+								</div>
+							</div>
+						</li>
+					</ul>
+
+					<ul class="mui-table-view" id="jinggaoDiv2" style="background: ;">
+
+					</ul>
+				</div>
+				<!--map-->
+				<div class="" style="width: 100%;height: 52%;background: ;float: left;">
+					<div id="map" style="width: 100%;height: 105%;position: relative; border-right:1px solid white;">
+						<div id="" style="z-index: 9999; position: absolute;bottom: 0px;right: 0px;background: #CCCCCC;padding: 0px 3px;">
+								Control App
+							</div>
+					</div>
+				</div>
+			</div>
+			<!--飞行仪-->
+
+			<div id="" style="width: 70%;height: 100%;background: #70B8F8;float: left;position: relative;">
+				<!--<span id="attitude" style="width: 70%;height: 100%;background: #70B8F8;"></span>-->
+				<div id="" style="width: 100%;height: 100%; position: relative;overflow: hidden;">
+					<div id="backImg"></div>
+					<div id="backImg">
+						<div id="d1" style="height: 50%;width: 100%;">
+
+						</div>
+						<div id="d2" style="height: 50%;width: 100%;">
+
+						</div>
+					</div>
+					<!--<embed src="img/fi_box_copy.svg" id="backImg" type="image/svg+xml" style="width: ;" />-->
+
+					<embed src="img/horizon_circle_copy.svg" id="banyuan" type="image/svg+xml" style="width: 60rem;" />
+
+					<embed src="img/horizon_ball.svg" id="chuizhi" type="image/svg+xml" style="width: 20rem;" />
+					<embed src="img/horizon_mechanics.svg" id="jiaodu" type="image/svg+xml" style="width: 60rem;" />
+				</div>
+
+				<!--top标尺-->
+				<div class="" style="width: 100%;height: 55px;background:;z-index: 99999; position: absolute;top: 0px;border-style:double;">
+					<div id="" style="height: 55px;white-space: nowrap;overflow: hidden;position: relative;">
+						<div id="topRDiv" style="height: 55px;width: 9999px;margin-top: 18px;">
+							<!--<div id="" style="width: 20px;height: 20px;position: relative;border-left: 2px solid black;background: wheat;float: left;">
+								<span id="" style="position: absolute;right: 12px;top: -18px;">90</span>
+							</div>
+							<div id="" style="width:20px;height:15px;border-left:2px solid black;background: wheat;float: left;margin-top: 5px;"></div>
+							<div id="" style="width:20px;height:15px;border-left:2px solid black;background: wheat;float: left;margin-top: 5px;"></div>
+							<div id="" style="width:20px;height:15px;border-left:2px solid black;background: wheat;float: left;margin-top: 5px;"></div>
+							<div id="" style="width:20px;height:15px;border-left:2px solid black;background: wheat;float: left;margin-top: 5px;"></div>-->
+
+							<!--<embed src="img/top.svg" id="topImg" type="image/svg+xml" style="width: 150rem;" />-->
+						</div>
+						<div id="" style="position: absolute;bottom:0px;left: 320px;-webkit-transform:rotate(-90deg)">
+							<img width="30px" src="img/right186.png" />
+						</div>
+					</div>
+
+				</div>
+				<div id="" style="width: 150px;height: 70px;padding-left: 5px; background:;z-index: 99999; position: absolute;bottom: 100px;font-size:2rem;color: ;">
+					<div id="">
+						空速:
+						<b><span id="airspeed">0</span></b>
+					</div>
+					<div id="">
+						地速:
+						<b><span id="landspeed">0</span></b>
+					</div>
+
+					<div id="">
+						气压:
+						<b><span id="gps"></span></b>
+					</div>
+					<div id="">
+						GPS状态:
+						<b><span id="gps"></span></b>
+					</div>
+				</div>
+				<!--left标尺-->
+
+				<div class="" style="width: 70px;height: 200px;background:;position: absolute;top: 6rem;border-style:double;">
+					<div id="height1" style="width: 70px;height: 200px;position: relative;background: ;overflow:hidden;">
+						<div id="leftRDiv">
+							<!--<div id="" style="width:20px;height:10px;border-top:2px solid black;background: white;position: relative;">
+								<span id="" style="position: absolute;right: -30px;top: -10px;">1000</span>
+							</div>
+							<div id="" style="width:15px;height:10px;border-top:2px solid black;background: wheat;"></div>
+							<div id="" style="width:15px;height:10px;border-top:2px solid black;background: wheat;"></div>
+							<div id="" style="width:15px;height:10px;border-top:2px solid black;background: wheat;"></div>
+							<div id="" style="width:15px;height:10px;border-top:2px solid black;background: wheat;"></div>-->
+						</div>
+
+						<div id="" style="position: absolute;top: calc(50% - 15px);right: 6px;">
+							<img width="30px" src="img/left186.png" />
+						</div>
+					</div>
+
+				</div>
+
+				<!--right标尺-->
+				<div class="" style="width: 70px;height: 200px;background: ;position: absolute;top: 6rem;right: 0px;border-style:double;">
+					<div id="height2" style="width: 70px;height: 200px;position: relative;background: ;overflow:hidden;">
+						<div id="rightRDiv" style="float: right;padding-right:5px ;">
+							<!--<div id="" style="width:20px;height:10px;border-top:2px solid black;background: white;position: relative;">
+								<span id="" style="position: absolute;right:25px ;top: -10px;">1000</span>
+							</div>
+							<div id="" style="width:15px;height:10px;border-top:2px solid black;background: wheat;margin-left: 5px;"></div>
+							<div id="" style="width:15px;height:10px;border-top:2px solid black;background: wheat;margin-left: 5px;"></div>
+							<div id="" style="width:15px;height:10px;border-top:2px solid black;background: wheat;margin-left: 5px;"></div>
+							<div id="" style="width:15px;height:10px;border-top:2px solid black;background: wheat;margin-left: 5px;"></div>-->
+						</div>
+						<div id="" style="position: absolute;top: calc(50% - 15px);left: 0px;">
+							<img width="30px" src="img/right186.png" />
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</body>
+
+</html>
+<!--<script src="http://mockjs.com/dist/mock.js"></script>-->
+<!--<script type="text/javascript">
+	// Mock响应模板
+	Mock.mock('http://test.com', {
+		"data|5-10": [{ // 随机生成1到3个数组元素
+			'yaw|+1': 1, // 中文名称
+			'roll': 10, // 属性值自动加 1，初始值为88
+			'pitch|50-55': 1, // 18至28以内随机整数, 0只是用来确定类型
+			'left|50-55': 1,
+			'right|50-55': 1,
+			'lat|39-40.5': 1, // 日期
+			'lng|116-117.5': 1, // 日期
+
+		}]
+	});
+</script>-->
+<script src="js/mui.min.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/leaflet.js"></script>
+<script src="js/planeIcon.js"></script>
+<!--仪表盘插件-->
+<script src="js/jquery.flightindicators.js"></script>
+<!--模拟飞机插件-->
+<script src="js/MovingMarker.js"></script>
+<script type="text/javascript">
+	//	横屏显示
+	mui.plusReady(function() {
+		plus.screen.lockOrientation("landscape-primary");
+	});
+	//返回主界面
+	$('#backMain').click(function() {
+		//		mui.back()
+	})
+	var htmlLeft = '';
+	var htmlRight = '';
+	var htmlTop = '';
+	for(var i = 12; i > 0; i--) {
+		htmlLeft += '<div id="" style="width:20px;height:10px;border-top:2px solid black;background: ;position: relative;">' +
+			'<span id="" style="position: absolute;right: -34px;top: -11px;"><b>' + i + "000" + '</b></span>' +
+			'</div>' +
+			'<div id="" style="width:15px;height:10px;border-top:2px solid black;background: ;"></div>' +
+			'<div id="" style="width:15px;height:10px;border-top:2px solid black;background: ;"></div>' +
+			'<div id="" style="width:15px;height:10px;border-top:2px solid black;background: ;"></div>' +
+			'<div id="" style="width:15px;height:10px;border-top:2px solid black;background: ;"></div>';
+		htmlRight += '<div id="" style="width:20px;height:10px;border-top:2px solid black;background: ;position: relative;">' +
+			'<span id="" style="position: absolute;right:22px ;top: -11px;"><b>' + i + "0" + '</b></span>' +
+			'</div>' +
+			'<div id="" style="width:15px;height:10px;border-top:2px solid black;background: ;margin-left: 5px;"></div>' +
+			'<div id="" style="width:15px;height:10px;border-top:2px solid black;background: ;margin-left: 5px;"></div>' +
+			'<div id="" style="width:15px;height:10px;border-top:2px solid black;background: ;margin-left: 5px;"></div>' +
+			'<div id="" style="width:15px;height:10px;border-top:2px solid black;background: ;margin-left: 5px;"></div>';
+
+	}
+	htmlLeft += '<div id="" style="width:20px;height:10px;border-top:2px solid black;background: ;position: relative;">' +
+		'<span id="" style="position: absolute;right: -10px;top: -10px;"><b>' + "0" +
+		'</b></span>' +
+		'</div>';
+	htmlRight += '<div id="" style="width:20px;height:10px;border-top:2px solid black;background: ;position: relative;">' +
+		'<span id="" style="position: absolute;right: 22px;top: -10px;"><b>' + "0" +
+		'</b></span>' +
+		'</div>';
+	var topArr = ['东', '东南', '南', '西南', '西270', '西北', '北0', '东北', '东90', '东南', '南180', '西南', '西270', '西北', '北0', '东北', '东90', '东南', '南', '西南', '西', '西北', '北', '东北']
+	for(var i = 0; i < topArr.length; i++) {
+		htmlTop += '<div id="" style="width: 20px;height: 20px;position: relative;border-left: 2px solid black;border-bottom:2px solid black;background: ;float: left;">' +
+			'<span id="" style="position: absolute;right: 12px;top: -18px;">' + topArr[i] + '</span>' +
+			'</div>' +
+			'<div id="" style="width:20px;height:15px;border-left:2px solid black;border-bottom:2px solid black;background: ;float: left;margin-top: 5px;"></div>' +
+			'<div id="" style="width:20px;height:15px;border-left:2px solid black;border-bottom:2px solid black;background: ;float: left;margin-top: 5px;"></div>' +
+			'<div id="" style="width:20px;height:15px;border-left:2px solid black;border-bottom:2px solid black;background: ;float: left;margin-top: 5px;"></div>' +
+			'<div id="" style="width:20px;height:15px;border-left:2px solid black;border-bottom:2px solid black;background: ;float: left;margin-top: 5px;"></div>';
+	}
+	htmlTop += '<div id="" style="width: 20px;height: 20px;position: relative;border-left: 2px solid black;border-bottom:0px solid black;background: ;float: left;">' +
+		'<span id="" style="position: absolute;right: 12px;top: -18px;">' + '东' + '</span>' +
+		'</div>';
+	$('#leftRDiv').append(htmlLeft)
+	$('#rightRDiv').append(htmlRight)
+	$('#topRDiv').append(htmlTop)
+</script>
+<script type="text/javascript">
+	var ipAddress = localStorage.getItem('ipAddress');
+	ipAddress = JSON.parse(ipAddress)
+	var UserPhone = localStorage.getItem('UserPhone');
+	// 获取地图ipad路径
+	var map_relativePath = "_downloads/";
+	var sd_path = plus.io.convertLocalFileSystemURL(map_relativePath);
+
+	//地图
+	var map = L.map('map', {
+		editable: true,
+		center: [39.9, 116.4],
+		zoom: 14,
+	});
+
+	var plane = L.icon({
+		iconUrl: 'img/plane.png',
+		//					  shadowUrl: 'img/plane-shadow.png',
+	});
+
+	L.marker([39.9, 116.4], {
+		icon: plane
+	}).addTo(map);
+	plus.geolocation.getCurrentPosition(function(p) {
+		alert('Geolocation\nLatitude:' + p.coords.latitude + '\nLongitude:' + p.coords.longitude + '\nAltitude:' + p.coords.altitude);
+		yin = L.icon({
+			iconUrl: 'img/plane.png',
+			iconSize: [30, 30], // size of the icon
+		});
+		L.marker([p.coords.latitude, p.coords.longitude], {
+			icon: yin
+		}).addTo(map);
+
+	}, function(e) {
+		alert('Geolocation error: ' + e.message);
+	});
+	//	L.tileLayer(sd_path + '/hybrid/{z}/{x}/{y}.jpg', {
+	L.tileLayer('http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png', { //pc测试
+		maxZoom: 18,
+	}).addTo(map);
+
+	var positionA1 = null; //禁飞区点标记
+
+	//	setInterval(function() {
+	//		positionClk(x++, 116.4)
+	//		$('#height1').html(x++);
+	//		$('#height1').html(x++);
+	//	}, 1000)
+
+	function positionClk(lat, lng) {
+		//		console.log([lat, lng])
+		if(positionA1 == null) {
+			positionA1 = L.marker([lat, lng], {
+				icon: plane,
+				zIndexOffset: 999,
+			}).addTo(map)
+			map.panTo(positionA1.getLatLng())
+		} else {
+			positionA1.remove(); //						positionA1 = null;
+			positionA1 = L.marker([lat, lng], {
+				icon: plane,
+				zIndexOffset: 999,
+			}).addTo(map)
+			map.panTo(positionA1.getLatLng())
+		}
+
+	}
+	var record_id = '';
+	mui.plusReady(function() {
+		var self = plus.webview.currentWebview();
+		record_id = self.record_id; //获得参数
+	})
+	var index = 0;
+
+	function xxxClk() {
+		console.log(record_id);
+		console.log(index);
+	}
+
+	setInterval(function() {
+		$.ajax({
+			type: "get",
+			url: "http://" + ipAddress + "/api/Values/GetFlyData",
+			contentType: 'application/json',
+			data: {
+				record_id: record_id,
+				index: index += 3,
+				num: 3,
+			},
+			success: function(data) {
+				//								console.log(data)
+				//				var data = data.data
+
+				for(var i in data) {
+					(function() {
+						var x = i;
+						//						var xxx = setTimeout(function() {
+						console.log(data[x]);
+						$("#airspeed").html(data[x].airspeed)
+						$("#landspeed").html(data[x].landspeed)
+
+						$("#topRDiv").css("-webkit-transform", "translateX(" + -(data[x].yaw / 0.45 + 266) + "px)")
+						$("#leftRDiv").css("-webkit-transform", "translateY(" + (data[x].alt / 20 - 500) + "px)")
+						$("#rightRDiv").css("-webkit-transform", "translateY(" + -data[x].right + "px)")
+						$("#backImg").css("-webkit-transform", "rotate(" + -data[x].roll + "deg) translateY(" + (data[x].pitch + 2) * 10 + "px)")
+						$("#banyuan").css("-webkit-transform", "rotate(" + -data[x].roll + "deg)")
+						$("#chuizhi").css("-webkit-transform", "rotate(" + -data[x].roll + "deg) translateY(" + (data[x].pitch + 2) * 10 + "px)")
+						positionClk(data[x].lat, data[x].lng)
+						//						}, 20 * x);
+
+						switch(true) {
+							case data[x].yaw > 0 && data[x].yaw < 45:
+								plane = plane45;
+								console.log(plane)
+								break;
+							case data[x].yaw > 45 && data[x].yaw < 90:
+								plane = plane90;
+								console.log(plane)
+								break;
+							case data[x].yaw > 90 && data[x].yaw < 135:
+								plane = plane135;
+								console.log(plane)
+								break;
+							case data[x].yaw > 135 && data[x].yaw < 180:
+								plane = plane180;
+								console.log(plane)
+								break;
+							case data[x].yaw > 180 && data[x].yaw < 225:
+								plane = plane225;
+								console.log(plane)
+								break;
+							case data[x].yaw > 225 && data[x].yaw < 270:
+								plane = plane270;
+								console.log(plane)
+								break;
+							case data[x].yaw > 270 && data[x].yaw < 315:
+								plane = plane315;
+								console.log(plane)
+								break;
+							case data[x].yaw > 315:
+								plane = plane;
+								console.log(plane)
+								break;
+						}
+						if(data[x].gpsstate == 0) {
+							var pianhang = 'GPS未定位';
+							warn(pianhang)
+						} else if(data[x].gpsstate == 1) {
+							$("#gps").html('实时GPS')
+						} else if(data[x].gpsstate == 2) {
+							$("#gps").html('差分GPS')
+						}
+
+						if(data[x].roll > 10) {
+							var pianhang = '偏离轨迹';
+							warn(pianhang)
+						}
+						//						else {
+						//							var pianhang = 'clear';
+						//							//							console.log(pianhang)
+						//							warn(pianhang)
+						//
+						//						}1
+						if(data[x].roll < -10) {
+							var pianhang = '高危姿态';
+							warn(pianhang)
+						}
+					})();
+				}
+
+			}
+		})
+
+	}, 1000000);
+
+	function audioFn1() {
+		var aud = document.getElementById("aud");
+		var img = document.getElementById("playpause");
+		var im = document.getElementsByClassName("img");
+		var audio1 = document.getElementsByTagName("audio");
+		aud.play();
+	}
+	var num1 = 0,
+		num2 = 0,
+		num3 = 0;
+
+	function warn(pianhang) {
+		var relativePath1 = '';
+
+		switch(pianhang) {
+			case '偏离轨迹':
+				$('#jinggaoDiv0').html(html);
+				$('#jinggaoDiv1').html('');
+				$('#jinggaoDiv2').html('');
+				num1++;
+				relativePath1 = localStorage.getItem('stopWarnRecord2');
+				break;
+			case '高危姿态':
+				$('#jinggaoDiv2').html(html);
+				$('#jinggaoDiv1').html('');
+				$('#jinggaoDiv0').html('');
+				num2++;
+				relativePath1 = localStorage.getItem('stopWarnRecord3');
+				break;
+			case 'GPS未定位':
+				$('#jinggaoDiv1').html(html);
+				$('#jinggaoDiv0').html('');
+				$('#jinggaoDiv2').html('');
+				num3++;
+				relativePath1 = localStorage.getItem('stopWarnRecord4');
+				break;
+		}
+
+		var sd_path = plus.io.convertLocalFileSystemURL(relativePath1);
+		var html = '<li class="mui-table-view-cell mui-collapse animated flash">' +
+			'<a class="mui-navigate-right" href="#">' + pianhang + '</a>' +
+			'<div class="mui-collapse-content">' +
+			'<div id="" style="height: 100%;display: inline-block;margin-top: 0.3rem ;margin-left: 3rem;">' +
+			'<audio src="' + sd_path + '" id="aud"></audio>' +
+			'<img src="img/audiox.png" class="img" id="playpause" onclick="audioFn1()"  />' +
+			'</div>' +
+			'</div>' +
+			'</li>';
+		if(pianhang == '偏离轨迹') {
+			if(num1 == 200) {
+				$('#jinggaoDiv1').html(html);
+				audioFn1()
+				num1 = 0;
+			}
+		}
+		if(pianhang == '高危姿态') {
+			if(num2 == 200) {
+				$('#jinggaoDiv2').html(html);
+				audioFn1()
+				num2 = 0;
+			}
+		}
+		if(pianhang == 'GPS未定位') {
+			if(num3 == 200) {
+				$('#jinggaoDiv0').html(html);
+				audioFn1()
+				console.log(num3)
+				num3 = 0;
+			}
+		}
+
+		if(pianhang == 'clear') {
+			$('#jinggaoDiv1').html('');
+			$('#jinggaoDiv1').html('');
+		}
+	}
+
+	if(line != null) {
+		map.removeLayer(line);
+	}
+
+	var lineHtml = JSON.parse(localStorage.getItem('planeline'));
+
+	var line = L.polyline(lineHtml.points).addTo(map);
+	map.fitBounds(lineHtml.points); //点击定位line到屏幕中心
+	//	moniFly()
+
+	//飞行模拟
+	function moniFly() {
+		var marker = L.Marker.movingMarker(line._latlngs, [3000, 1000, 9000, 4000, 9000, 9000, 9000, 9000], {
+			autostart: true
+		}).addTo(map);
+		marker.on('end', function() {
+			marker.remove();
+		});
+	}
+
+	function overClk() {
+		mui.back()
+	}
+</script>

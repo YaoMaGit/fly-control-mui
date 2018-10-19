@@ -1,0 +1,44 @@
+{
+  "main.html": {
+    "resources": [
+      "js/leaflet.js",
+      "img/lightning_.png",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "img/aircraft_.png",
+      "img/ic_satellite_.png",
+      "img/home_ .png",
+      "css/leaflet.css",
+      "img/time_.png",
+      "js/jquery.min.js",
+      "login.html",
+      "js/leaflet-editable-polyline.js",
+      "img/editmarker.png",
+      "img/editmarker2.png",
+      "js/Leaflet.Editable.js",
+      "js/echarts.min.js"
+    ],
+    "refer": [
+      "login.html",
+      "mask.html"
+    ]
+  },
+  "login.html": {
+    "resources": [
+      "css/loginstyle.css"
+    ],
+    "refer": [
+      "main.html"
+    ]
+  },
+  "mask.html": {
+    "resources": [
+      "img/1.png",
+      "js/mui.min.js"
+    ],
+    "refer": [
+      "login.html"
+    ]
+  }
+}

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>login</title>
+		<link href="css/loginstyle.css" rel='stylesheet' type='text/css' />
+		<meta name="viewport" content="width=device-width,height=device-height,user-scalable=no" />
+		</script>
+	</head>
+
+	<body>
+		<h1>AirControl APP</h1>
+		<div class="app-location">
+			<!--<h2>注册</h2>-->
+			<div class="line"><span></span></div>
+			<form>
+				<input id="user" type="text" placeholder="用户名">
+				<input id="password1" type="password" placeholder="输入旧的密码">
+				<input id="password2" type="password" placeholder="确认新的密码">
+				<div class="submit"><input style="width: 50%;height: 3rem;background-color: springgreen;color: white;font-size: 1rem;" type="button" onclick="myFunction()" value="注册"></div>
+				<div class="clear"></div>
+				<div class="new">
+					<h3 onclick="backClk()"><a href="#">《《去登录</a></h3>
+					<!--<h4><a href="#">新用户</a></h4>-->
+					<div class="clear"></div>
+				</div>
+			</form>
+		</div>
+		<!--start-copyright-->
+		<!--<div class="copy-right">
+				<p>Copyright &copy; 2015.Company name All rights reserved.<a target="_blank" href="http://sc.chinaz.com/moban/">&#x7F51;&#x9875;&#x6A21;&#x677F;</a></p>
+		</div>-->
+		<!--//end-copyright-->
+	</body>
+	<script src="js/mui.min.js"></script>
+	<script type="text/javascript">
+		// 账号登录提交事件
+		function myFunction() {
+			var username = trim(document.getElementById("user").value);
+			var passsword1 = trim(document.getElementById("password1").value);
+			var newPassWord = trim(document.getElementById("password2").value);
+			console.log(username)
+			var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+			var sign = true;
+			if(username == "") {
+				mui.toast('用户名不能为空');
+				sign = false;
+				return false;
+
+			}
+
+			if(!myreg.test(username)) {
+				mui.toast('请输入有效的手机号码');
+				sign = false;
+				return false;
+			}
+
+			if(passsword1 == "") {
+				mui.toast('密码不能为空');
+				sign = false;
+				return false;
+			}
+			if(newPassWord == "") {
+				mui.toast('密码不能为空');
+				sign = false;
+				return false;
+			}
+
+			if(sign) {
+				mui.get('http://101.201.105.176:8015/api/AirInfo/ModifyPass', {
+					'userPhone': username,
+					'passWord': passsword1,
+					'newPassWord': newPassWord
+				}, function(data) {
+					console.log(data)
+					if(data == true) {
+						mui.toast('注册成功请返回登录');
+					} else {
+						mui.toast('改账号已注册');
+					}
+				}, 'json');
+
+			}
+
+		}
+		// 清除字符串两边的空格
+		function trim(str) { //删除左右两端的空格
+			return str.replace(/(^\s*)|(\s*$)/g, "");　　
+		}
+
+		function backClk() {
+			mui.back();
+		}
+	</script>
+
+</html>

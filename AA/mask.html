@@ -1,0 +1,855 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta name="HandheldFriendly" content="true" />
+		<meta name="MobileOptimized" content="320" />
+		<title>Hello H5+</title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			
+			.mui-views,
+			.mui-view,
+			.mui-pages,
+			.mui-page,
+			.mui-page-content {
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+				height: 100%;
+				background-color: #efeff4;
+			}
+			
+			.mui-pages {
+				top: 46px;
+				height: auto;
+			}
+			
+			.mui-scroll-wrapper,
+			.mui-scroll {
+				background-color: #efeff4;
+			}
+			
+			.mui-page.mui-transitioning {
+				-webkit-transition: -webkit-transform 300ms ease;
+				transition: transform 300ms ease;
+			}
+			
+			.mui-page-left {
+				-webkit-transform: translate3d(0, 0, 0);
+				transform: translate3d(0, 0, 0);
+			}
+			
+			.mui-ios .mui-page-left {
+				-webkit-transform: translate3d(-20%, 0, 0);
+				transform: translate3d(-20%, 0, 0);
+			}
+			
+			.mui-navbar {
+				position: fixed;
+				right: 0;
+				left: 0;
+				z-index: 10;
+				height: 44px;
+				background-color: #f7f7f8;
+			}
+			
+			.mui-navbar .mui-bar {
+				position: absolute;
+				background: transparent;
+				text-align: center;
+			}
+			
+			.mui-android .mui-navbar-inner.mui-navbar-left {
+				opacity: 0;
+			}
+			
+			.mui-ios .mui-navbar-left .mui-left,
+			.mui-ios .mui-navbar-left .mui-center,
+			.mui-ios .mui-navbar-left .mui-right {
+				opacity: 0;
+			}
+			
+			.mui-navbar .mui-btn-nav {
+				-webkit-transition: none;
+				transition: none;
+				-webkit-transition-duration: .0s;
+				transition-duration: .0s;
+			}
+			
+			.mui-navbar .mui-bar .mui-title {
+				display: inline-block;
+				width: auto;
+			}
+			
+			.mui-page-shadow {
+				position: absolute;
+				right: 100%;
+				top: 0;
+				width: 16px;
+				height: 100%;
+				z-index: -1;
+				content: '';
+			}
+			
+			.mui-page-shadow {
+				background: -webkit-linear-gradient(left, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, .01) 50%, rgba(0, 0, 0, .2) 100%);
+				background: linear-gradient(to right, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, .01) 50%, rgba(0, 0, 0, .2) 100%);
+			}
+			
+			.mui-navbar-inner.mui-transitioning,
+			.mui-navbar-inner .mui-transitioning {
+				-webkit-transition: opacity 300ms ease, -webkit-transform 300ms ease;
+				transition: opacity 300ms ease, transform 300ms ease;
+			}
+			
+			.mui-page {
+				display: none;
+			}
+			
+			.mui-pages .mui-page {
+				display: block;
+			}
+			
+			.mui-page .mui-table-view:first-child {
+				margin-top: 15px;
+			}
+			
+			.mui-page .mui-table-view:last-child {
+				margin-bottom: 30px;
+			}
+			
+			.mui-table-view {
+				margin-top: 20px;
+			}
+			
+			.mui-table-view span.mui-pull-right {
+				color: #999;
+			}
+			
+			.mui-table-view-divider {
+				background-color: #efeff4;
+				font-size: 14px;
+			}
+			
+			.mui-table-view-divider:before,
+			.mui-table-view-divider:after {
+				height: 0;
+			}
+			
+			.head {
+				height: 40px;
+			}
+			
+			#head {
+				line-height: 40px;
+			}
+			
+			.head-img {
+				width: 40px;
+				height: 40px;
+			}
+			
+			#head-img1 {
+				position: absolute;
+				bottom: 10px;
+				right: 40px;
+				width: 40px;
+				height: 40px;
+			}
+			
+			.update {
+				font-style: normal;
+				color: #999999;
+				margin-right: -25px;
+				font-size: 15px
+			}
+			
+			.mui-fullscreen {
+				position: fixed;
+				z-index: 20;
+				background-color: #000;
+			}
+			
+			.mui-ios .mui-navbar .mui-bar .mui-title {
+				position: static;
+			}
+			/*问题反馈在setting页面单独的css*/
+			
+			#feedback .mui-popover {
+				position: fixed;
+			}
+			
+			#feedback .mui-table-view:last-child {
+				margin-bottom: 0px;
+			}
+			
+			#feedback .mui-table-view:first-child {
+				margin-top: 0px;
+			}
+			
+			#cloud_loading {
+				width: 100%;
+				color: red;
+				text-align: center;
+			}
+			
+			input[type=radio],
+			input[type=checkbox] {
+				margin: 0!important;
+			}
+			/*问题反馈在setting页面单独的css==end*/
+		</style>
+	</head>
+
+	<body style="margin:0;padding:0;">
+		<!--<img src="img/1.png" />
+		<span onclick="back()" style="color: red;font-size:3rem;position: fixed;right: 0.5rem;top: 0.5rem;" class="mui-icon mui-icon-close"></span>
+		
+		<div style="width:100%;height:20%;position:fixed;bottom:5rem;padding: 0rem  3rem;">
+			<button type="button" onclick="login()" class="mui-btn mui-btn-warning mui-btn-block mui-btn-primary">切换用户</button>
+		</div>
+
+		<div style="width:100%;height:20%;position:fixed;bottom:0rem;padding: 0rem  3rem;">
+			<button type="button" onclick="quitCli()" class="mui-btn mui-btn-warning mui-btn-block mui-btn-primary">退出</button>
+		</div>-->
+		<div id="app" class="mui-views">
+			<div class="mui-view">
+				<div class="mui-navbar">
+				</div>
+				<div class="mui-pages">
+				</div>
+			</div>
+		</div>
+
+		<div id="setting" class="mui-page">
+			<!--页面标题栏开始-->
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<span onclick="back()" style="color: red;font-size:4rem;position: fixed;right: 0rem;top: -0.7rem;" class="mui-icon mui-icon-close"></span>
+				<h1 class="mui-center mui-title">个人中心</h1>
+			</div>
+			<!--页面标题栏结束-->
+			<!--页面主内容区开始-->
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<ul class="mui-table-view mui-table-view-chevron">
+							<li class="mui-table-view-cell mui-media">
+								<a class="mui-navigate-right">
+									<img class="mui-media-object mui-pull-left head-img" id="head-img" src="img/1.png">
+									<div class="mui-media-body">
+										AirControl APP
+										<p class='mui-ellipsis'>账号: <span class="userid"></span></p>
+									</div>
+								</a>
+							</li>
+						</ul>
+						<ul class="mui-table-view mui-table-view-chevron">
+							<li class="mui-table-view-cell">
+								<a href="#account" class="mui-navigate-right">离线地图下载</a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a href="#line" class="mui-navigate-right">飞行记录</a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a href="#cloud" class="mui-navigate-right">云端同步</a>
+							</li>
+						</ul>
+						<ul class="mui-table-view mui-table-view-chevron">
+							<li class="mui-table-view-cell">
+								<a href="#privacy" class="mui-navigate-right">服务配置</a>
+							</li>
+
+							<!--<li class="mui-table-view-cell">
+								<a href="#general" class="mui-navigate-right">音频配置</a>
+							</li>-->
+						</ul>
+						<ul class="mui-table-view mui-table-view-chevron">
+							<li class="mui-table-view-cell">
+								<a href="#about" class="mui-navigate-right">关于APP <i class="mui-pull-right update">V1.0.0</i></a>
+							</li>
+						</ul>
+						<ul class="mui-table-view">
+							<li onclick="login()" class="mui-table-view-cell" style="text-align: center;">
+								<a>退出登录</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!--页面主内容区结我束-->
+		</div>
+		<div id="account" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<span onclick="back()" style="color: red;font-size:4rem;position: fixed;right: 0rem;top: -0.7rem;" class="mui-icon mui-icon-close"></span>
+				<h1 class="mui-center mui-title">离线地图下载</h1>
+			</div>
+
+			<div class="mui-page-content">
+
+				<div class="mui-scroll-wrapper">
+
+					<div class="mui-scroll">
+
+						<ul class="mui-table-view" id="count_ul">
+							<!--<li class="mui-table-view-cell mui-radio mui-right disabled">
+								<input name="checkbox" type="radio" value="beijing">
+								<input type="hidden" name="" id="" value="86" />
+								<span>北京</span>
+							</li>-->
+
+						</ul>
+						<div id="tishiDiv" style="color: red;text-align: center;margin-top: 2rem;">
+
+						</div>
+						<div id="" style="width: 100%;height:; background: ;padding: 0px 100px;margin-top: 2rem;">
+							<button style="" data-loading-text="下载地图..." data-loading-icon="mui-spinner mui-spinner-custom" onclick="downloadClk()" type="button" class="mui-btn mui-btn-warning  mui-btn-block downloader">下载地图</button>
+						</div>
+						<!--<span class="mui-spinner"></span>-->
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div id="line" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<span onclick="back()" style="color: red;font-size:4rem;position: fixed;right: 0rem;top: -0.7rem;" class="mui-icon mui-icon-close"></span>
+				<h1 class="mui-center mui-title">飞行记录</h1>
+			</div>
+
+			<div class="mui-page-content">
+
+				<div class="mui-scroll-wrapper">
+
+					<div class="mui-scroll">
+						<ul class="mui-table-view" id="OA_task_1">
+							<!--<li class="mui-table-view-cell mui-radio mui-right">
+								<input name="checkbox" type="radio">航迹1
+							</li>-->
+
+						</ul>
+						<div id="" style="width: 100%;height:; background: ;padding: 0px 100px;margin-top: 50px;">
+							<button style="" data-loading-text="回放航迹" data-loading-icon="mui-spinner mui-spinner-custom" onclick="downLineBtn()" type="button" class="mui-btn mui-btn-warning  mui-btn-block downloader">回放航迹</button>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div id="cloud" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<span onclick="back()" style="color: red;font-size:4rem;position: fixed;right: 0rem;top: -0.7rem;" class="mui-icon mui-icon-close"></span>
+				<h1 class="mui-center mui-title">云端同步</h1>
+			</div>
+
+			<div class="mui-page-content">
+
+				<div class="mui-scroll-wrapper">
+
+					<div class="mui-scroll">
+						<ul class="mui-table-view" id="OA_task_2">
+							<!--<li class="mui-table-view-cell mui-radio mui-right">
+								<input name="checkbox" type="radio">日志111
+							</li>-->
+
+						</ul>
+						<div id="cloud_loading">
+							<!--上传中请不要关闭窗口-->
+						</div>
+
+						<div id="" style="width: 100%;height:; background: ;padding: 0px 100px;margin-top: 50px;">
+							<button style="" data-loading-text="同步日志" data-loading-icon="mui-spinner mui-spinner-custom" onclick="cloudBtn()" type="button" class="mui-btn mui-btn-warning  mui-btn-block downloader">同步日志</button>
+						</div>
+						<div style="text-align: center;width: 100%;">云端:<span style="color: blue;">蓝色字体</span>&nbsp&nbsp;本地：<span style="color: ;">黑色字体</span></div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div id="privacy" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<span onclick="back()" style="color: red;font-size:4rem;position: fixed;right: 0rem;top: -0.7rem;" class="mui-icon mui-icon-close"></span>
+				<h1 class="mui-center mui-title">服务配置</h1>
+			</div>
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll mui-content">
+						<p>配置服务地址:<span id="ipaddress">
+							
+						</span> </p>
+						<div class="mui-input-row">
+							<input id='contact' type="text" class="mui-input-clear contact" placeholder="请输入服务地址" value="192.168.0.101:8017" />
+						</div>
+						<div id="" style="width: 100%;height:; background: ;padding: 0px 100px;margin-top: 50px;">
+							<button style="" data-loading-text="确认" data-loading-icon="mui-spinner mui-spinner-custom" onclick="peizhiClk()" type="button" class="mui-btn mui-btn-warning  mui-btn-block downloader">确认</button>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<div id="general" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<span onclick="back()" style="color: red;font-size:4rem;position: fixed;right: 0rem;top: -0.7rem;" class="mui-icon mui-icon-close"></span>
+				<h1 class="mui-center mui-title">音频配置</h1>
+			</div>
+			<div class="mui-page-content">
+
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll ">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								开启默认
+								<div id="M_Toggle" class="mui-switch mui-active">
+									<div class="mui-switch-handle"></div>
+								</div>
+							</li>
+						</ul>
+
+						<div id="boolDiv" style="display: ; ">
+
+							<div id="" style="width: 100%;height: ;background: white;margin-top: 1rem; padding: 0.5rem 1rem;">
+								<div class="">
+									<div id="" style="float: left; margin-bottom: 1rem;">
+										禁飞区音频
+									</div>
+
+									<div id="name" style="float: right;margin-right: 2rem;">
+										<span id="stopNameSpan1" style="color: #8C8C8C;">
+											<!--xxx.wav-->
+										</span>
+										<img src="img/audiox.png" />
+									</div>
+								</div>
+								<div id="loadingDiv1" style="">
+									<!--<p class="mui-progressbar mui-progressbar-infinite"></p>-->
+								</div>
+								<div id="" style="clear: both;">
+
+								</div>
+								<div id="" style="margin-left: ;">
+									<button onclick="startRecord1()" type="button" class="btn btn-primary btn-sm active"><span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>开始录制</button>
+									<button onclick="stopRecord1()" type="button" class="btn btn-primary btn-sm active"><span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>结束录制</button>
+									<button onclick="startPlay1()" type="button" class="btn btn-primary btn-sm active"><span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>播放音频</button>
+								</div>
+							</div>
+
+							<div id="" style="width: 100%;height: ;background: white;margin-top: 1rem; padding: 0.5rem 1rem;">
+								<div class="">
+									<div id="" style="float: left; margin-bottom: 1rem;">
+										偏离轨迹
+									</div>
+									<div id="name" style="float: right;margin-right: 2rem;">
+										<span id="stopNameSpan2" style="color: #8C8C8C;">
+											<!--xxx.wav-->
+										</span>
+										<img src="img/audiox.png" />
+									</div>
+								</div>
+								<div id="loadingDiv2" style="">
+									<!--<p class="mui-progressbar mui-progressbar-infinite"></p>-->
+								</div>
+								<div id="" style="clear: both;">
+
+								</div>
+								<div id="">
+									<button onclick="startRecord2()" type="button" class="btn btn-primary btn-sm active"><span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>开始录制</button>
+									<button onclick="stopRecord2()" type="button" class="btn btn-primary btn-sm active"><span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>结束录制</button>
+									<button onclick="startPlay2()" type="button" class="btn btn-primary btn-sm active"><span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>播放音频</button>
+								</div>
+							</div>
+
+							<div id="" style="width: 100%;height: ;background: white;margin-top: 1rem; padding: 0.5rem 1rem;">
+								<div class="">
+									<div id="" style="float: left; margin-bottom: 1rem;">
+										高危姿态
+									</div>
+									<div id="name" style="float: right;margin-right: 2rem;">
+										<span id="stopNameSpan3" style="color: #8C8C8C;">
+											<!--xxx.wav-->
+										</span>
+										<img src="img/audiox.png" />
+									</div>
+								</div>
+								<div id="loadingDiv3" style="">
+									<!--<p class="mui-progressbar mui-progressbar-infinite"></p>-->
+								</div>
+								<div id="" style="clear: both;">
+
+								</div>
+								<div id="">
+									<button onclick="startRecord3()" type="button" class="btn btn-primary btn-sm active"><span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>开始录制</button>
+									<button onclick="stopRecord3()" type="button" class="btn btn-primary btn-sm active"><span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>结束录制</button>
+									<button onclick="startPlay3()" type="button" class="btn btn-primary btn-sm active"><span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>播放音频</button>
+								</div>
+							</div>
+
+							<div id="" style="width: 100%;height: ;background: white;margin-top: 1rem; padding: 0.5rem 1rem;">
+								<div class="">
+									<div id="" style="float: left; margin-bottom: 1rem;">
+										GPS未定位
+									</div>
+									<div id="name" style="float: right;margin-right: 2rem;">
+										<span id="stopNameSpan4" style="color: #8C8C8C;">
+											<!--xxx.wav-->
+										</span>
+										<img src="img/audiox.png" />
+									</div>
+								</div>
+								<div id="loadingDiv4" style="">
+									<!--<p class="mui-progressbar mui-progressbar-infinite"></p>-->
+								</div>
+								<div id="" style="clear: both;">
+
+								</div>
+								<div id="">
+									<button onclick="startRecord4()" type="button" class="btn btn-primary btn-sm active"><span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>开始录制</button>
+									<button onclick="stopRecord4()" type="button" class="btn btn-primary btn-sm active"><span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>结束录制</button>
+									<button onclick="startPlay4()" type="button" class="btn btn-primary btn-sm active"><span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>播放音频</button>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/mui.min.js"></script>
+	<script type="text/javascript" src="js/mui.view.js"></script>
+	<script type="text/javascript" src="js/common.js"></script>
+	<script src="js/downZip.js"></script>
+	<script src="js/record.js"></script>
+	<script src="js/historyLine.js"></script>
+	<script type="text/javascript">
+		var countrycode = localStorage.getItem('countrycode');
+		console.log(countrycode)
+		var html = '';
+		//			html +='<ul class="mui-table-view" >';
+		switch(countrycode) {
+			case '86':
+				html += '<li class="mui-table-view-cell mui-radio mui-right" class="mui-slider-handle">' +
+					'<input name="checkbox" type="radio" value="zhengzhou">' +
+					'<span>郑州</span>' +
+					'</li>';
+				break;
+			case 86:
+				html += '<li class="mui-table-view-cell mui-radio mui-right" class="mui-slider-handle">' +
+					'<input name="checkbox" type="radio" value="beijing">' +
+					'<span>北京</span>' +
+					'</li>';
+				break;
+			case 156:
+				html += '<li class="mui-table-view-cell mui-radio mui-right" class="mui-slider-handle">' +
+					'<input name="checkbox" type="radio" value="china">' +
+					'<span>中国</span>' +
+					'</li>';
+				break;
+			case 840:
+				html += '<li class="mui-table-view-cell mui-radio mui-right" class="mui-slider-handle">' +
+					'<input name="checkbox" type="radio" value="usa">' +
+					'<span>美国</span>' +
+					'</li>';
+				break;
+			case 724:
+				html += '<li class="mui-table-view-cell mui-radio mui-right" class="mui-slider-handle">' +
+					'<input name="checkbox" type="radio" value="espana">' +
+					'<span>西班牙</span>' +
+					'</li>';
+				break;
+			case 826:
+				html += '<li class="mui-table-view-cell mui-radio mui-right" class="mui-slider-handle">' +
+					'<input name="checkbox" type="radio" value="yingguo">' +
+					'<span>英国</span>' +
+					'</li>';
+				break;
+			case 200:
+
+				html += '<li class="mui-table-view-cell mui-radio mui-right" class="mui-slider-handle">' +
+					'<input name="checkbox" type="radio" value="jieke">' +
+					'<span>捷克</span>' +
+					'</li>';
+			case 200:
+				html += '<li class="mui-table-view-cell mui-radio mui-right" class="mui-slider-handle">' +
+					'<input name="checkbox" type="radio" value="germany">' +
+					'<span>德国</span>' +
+					'</li>';
+				break;
+		}
+		//		html+='</ul>';
+		$('#count_ul').html(html);
+	</script>
+	<script type="text/javascript">
+		var ipAddress = localStorage.getItem('ipAddress');
+		ipAddress = JSON.parse(ipAddress)
+		var UserPhone = localStorage.getItem('UserPhone');
+		$(".userid").html(UserPhone)
+		mui.get('http://' + ipAddress + '/api/Values/GetFlyRecord', {
+			userPhone: UserPhone
+		}, function(data) {
+			//获得服务器响应·
+			console.log(data)
+			var html = '';
+
+			for(var i in data) {
+				html += '<li  class="mui-table-view-cell mui-radio mui-right">' +
+					'<input name="checkbox" value="' + data[i].Record_id + '" type="radio">' + data[i].Record_name +
+					'<div class="mui-slider-right mui-disabled">' +
+					'<a id="' + data[i].Record_id + '" class="mui-btn mui-btn-red">删除</a>' +
+					'</div>' +
+					'<div class="mui-slider-handle">' +
+					//					'	12121' +
+					'</div>' +
+					'</li>';
+			}
+			$("#OA_task_1").append(html)
+
+		}, 'json');
+		//OA_task_2
+		console.log("云数据")
+		var cloud_data = JSON.parse(localStorage.getItem('cloud_data'));
+		console.log(localStorage.getItem('cloud_data'))
+		var html22 = ''
+		for(var key in cloud_data) {
+			if(cloud_data[key].bool == false) {
+				html22 += '<li class="mui-table-view-cell mui-radio ">' +
+					'<input name="checkbox" type="radio"  value="' + cloud_data[key].name + '"><span class="" style="color:;">' + cloud_data[key].name +
+					'</span><div class="mui-slider-right mui-disabled">' +
+					'<a id="' + cloud_data[key].name + '" class="mui-btn mui-btn-red">删除</a>' +
+					'</div>' +
+					'<div class="mui-slider-handle">' +
+					//					'	12121' +
+					'</div>' +
+					'</li>';
+			} else {
+				html22 += '<li class="mui-table-view-cell mui-radio mui-right">' +
+					'<input name="checkbox" type="radio"  value="' + cloud_data[key].name + '"><span style="color:blue;">' + cloud_data[key].name +
+					'</span><div class="mui-slider-right mui-disabled">' +
+//					'<a id="' + cloud_data[key].name + '" class="mui-btn mui-btn-red">删除</a>' +
+					'</div>' +
+					'<div class="mui-slider-handle">' +
+					//					'	12121' +
+					'</div>' +
+					'</li>';
+			}
+		}
+		$("#OA_task_2").append(html22)
+		var kml_arr = localStorage.getItem('cloud_data')
+
+		function cloudBtn() {
+			var down_name = ''
+			$.each($('#OA_task_2 input:radio'), function() {
+				if(this.checked) {
+					console.log($(this).val());
+					down_name = $(this).val();
+				}
+			});
+			$('#cloud_loading').html("上传中请不要关闭窗口")
+			var task = plus.uploader.createUpload("http://101.201.105.176:8015/api/Upload/UploadKml", {
+					method: "POST",
+					blocksize: 0,
+					priority: 100
+				},
+				function(t, status) {
+					// 上传完成
+					if(status == 200) {
+						$('#cloud_loading').html("上传成功")
+						var cloud_data = JSON.parse(localStorage.getItem('cloud_data'))
+						for(var i in cloud_data) {
+							if(cloud_data[i].name == down_name) {
+								cloud_data[i].bool = true
+							}
+						}
+						console.log("qqqqqqqqqqqqqqqqqqqqqqq")
+						console.log(JSON.stringify(cloud_data))
+						localStorage.setItem('cloud_data', JSON.stringify(cloud_data))
+						$("#OA_task_2").html('')
+						var new_cloud_data = JSON.parse(localStorage.getItem('cloud_data'));
+						console.log(localStorage.getItem('cloud_data'))
+						var new_html = ''
+						for(var key in new_cloud_data) {
+							if(new_cloud_data[key].bool == false) {
+								new_html += '<li class="mui-table-view-cell mui-radio mui-right">' +
+									'<input name="checkbox" type="radio"  value="' + cloud_data[key].name + '"><span style="color:;">' + cloud_data[key].name +
+									'</span><div class="mui-slider-right mui-disabled">' +
+									'<a id="' + cloud_data[key].name + '" class="mui-btn mui-btn-red">删除</a>' +
+									'</div>' +
+									'<div class="mui-slider-handle">' +
+									//					'	12121' +
+									'</div>' +
+									'</li>';
+							} else {
+								new_html += '<li class="mui-table-view-cell mui-radio mui-right">' +
+									'<input name="checkbox" type="radio"  value="' + cloud_data[key].name + '"><span style="color:blue;">' + cloud_data[key].name +
+									'</span><div class="mui-slider-right mui-disabled">' +
+									'<a id="' + cloud_data[key].name + '" class="mui-btn mui-btn-red">删除</a>' +
+									'</div>' +
+									'<div class="mui-slider-handle">' +
+									//					'	12121' +
+									'</div>' +
+									'</li>';
+							}
+						}
+						$("#OA_task_2").append(new_html)
+
+						//						alert("Upload success: " + t.url);
+					} else {
+						//						alert("Upload failed: " + status);
+					}
+				}
+			);
+			task.addFile("_downloads/" + down_name, {
+				key: "testdoc"
+			});
+			task.addData("string_key", "string_value");
+			//task.addEventListener( "statechanged", onStateChanged, false );
+			task.start();
+		}
+
+		function downLineBtn() {
+			$.each($('#OA_task_1 input:radio'), function() {
+				if(this.checked) {
+					console.log($(this).val());
+					mui.openWindow({
+						url: 'flypage4.html',
+						id: 'flypage4',
+						extras: {
+							record_id: $(this).val() //扩展参数
+						}
+					});
+				}
+			});
+		}
+		$('#ipaddress').html(localStorage.getItem('ipAddress'))
+
+		function peizhiClk() {
+			localStorage.setItem('ipAddress', JSON.stringify($(".contact").val()))
+			console.log($(".contact").val())
+			$('#ipaddress').html($(".contact").val())
+			mui.toast("配置成功")
+		}
+
+		function login() {
+			mui.get('http://101.201.105.176:8015/api/AirInfo/LoginOut', {
+				'userPhone': localStorage.getItem("UserPhone"),
+				'passWord': localStorage.getItem("password"),
+				'uuid': plus.device.uuid
+			}, function(data) {
+				console.log(data)
+				mui.openWindow({
+					url: "login.html",
+					id: "login",
+				})
+			}, 'json');
+		}
+
+		function quitCli() {
+			mui(document.body).on('tap', '.mui-btn', function(e) {
+				plus.runtime.quit();
+			});
+		}
+	</script>
+	<script>
+		mui.init();
+		//初始化单页view1
+		var viewApi = mui('#app').view({
+			defaultPage: '#setting'
+		});
+		//初始化单页的区域滚动
+		mui('.mui-scroll-wrapper').scroll();
+
+		var view = viewApi.view;
+		(function($) {
+			//处理view的后退与webview后退
+			var oldBack = $.back;
+			$.back = function() {
+				if(viewApi.canBack()) { //如果view可以后退，则执行view的后退
+					viewApi.back();
+				} else { //执行webview后退
+					oldBack();
+				}
+			};
+			//监听页面切换事件方案1,通过view元素监听所有页面切换事件，目前提供pageBeforeShow|pageShow|pageBeforeBack|pageBack四种事件(before事件为动画开始前触发)
+			//第一个参数为事件名称，第二个参数为事件回调，其中e.detail.page为当前页面的html对象
+			view.addEventListener('pageBeforeShow', function(e) {
+				//				console.log(e.detail.page.id + ' beforeShow');
+			});
+			view.addEventListener('pageShow', function(e) {
+				//				console.log(e.detail.page.id + ' show');
+			});
+			view.addEventListener('pageBeforeBack', function(e) {
+				//				console.log(e.detail.page.id + ' beforeBack');
+			});
+			view.addEventListener('pageBack', function(e) {
+				//				console.log(e.detail.page.id + ' back');
+			});
+		})(mui);
+
+		if(mui.os.stream) {
+			document.getElementById("check_update").display = "none";
+		}
+
+		$('#OA_task_1').on('tap', '.mui-btn', function(event) {
+			var id = this.getAttribute('id');
+			var elem = this;
+			var li = elem.parentNode.parentNode;
+
+			//			console.log(id)
+
+			mui.confirm('确认删除该条记录？', '飞行记录', function(e) {
+				if(e.index == 1) {
+					li.parentNode.removeChild(li);
+					console.log(id)
+
+					$.ajax({
+						type: "post",
+						url: "http://" + ipAddress + "/api/Values/DelFlyRecord",
+						//contentType: 'application/json',
+						data: {
+							"": id
+						},
+						success: function(data) {
+							console.log(data)
+						}
+					})
+
+				} else {
+					setTimeout(function() {
+						$.swipeoutClose(li);
+					}, 0);
+				}
+			});
+		});
+
+		$('#OA_task_2').on('tap', '.mui-btn', function(event) {
+			var id = this.getAttribute('id');
+			var elem = this;
+			var li = elem.parentNode.parentNode;
+			li.parentNode.removeChild(li);
+			console.log(id)
+			var cloud_data = JSON.parse(localStorage.getItem('cloud_data'))
+			for(var i in cloud_data) {
+				if(cloud_data[i].name == id) {
+					cloud_data.splice(i, 1)
+				}
+			}
+			localStorage.setItem('cloud_data', JSON.stringify(cloud_data))
+		});
+	</script>
+
+</html>

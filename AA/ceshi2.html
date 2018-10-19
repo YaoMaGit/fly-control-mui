@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>无标题文档</title>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+	</head>
+
+	<body>
+		<!--<div id="btn" style="width:100px; height:100px; background:#ddd;">
+		</div>-->
+		<button id="btn" onclick="xx()">xx</button>
+	</body>
+
+</html>
+<script src="js/mui.min.js"></script>
+<script>
+	function Person(name, age, job) {
+		this.name = name;
+		this.age = age;
+		this.job = job;
+		this.lessons = ['Math', 'Physics'];
+	}
+	if(typeof this.getName != 'function') { //通过判断实例封装
+		Person.prototype = {　　　　
+					constructor: Person, //原型字面量方式会将对象的constructor变为Object，此外强制指回Person
+			　　　　getName: function() {　　　　　　
+						return this.name;　　　　
+			}　　
+		}
+	}
+	var person1 = new Person('Jack', 19, 'SoftWare Engneer');
+	person1.lessons.push('Biology');
+	var person2 = new Person('Lily', 39, 'Mechanical Engneer');
+	alert(person1.lessons); //Math,Physics,Biology
+	alert(person2.lessons); //Math,Physics
+	console.log(person2); //Math,Physics
+	alert(person1.getName === person2.getName); //true,//共享原型中定义方法
+</script>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>login</title>
+		<link href="css/loginstyle.css" rel='stylesheet' type='text/css' />
+		<meta name="viewport" content="width=device-width,height=device-height,user-scalable=no" />
+		</script>
+	</head>
+
+	<body>
+		<h1>Air Control</h1>
+		<div class="app-location">
+			<!--<h2>Welcome to Locaticus</h2>-->
+			<div class="line"><span></span></div>
+			<!--<div class="location"><img src="img/locationLogin.png" class="img-responsive" alt="" /></div>-->
+			<form>
+				<input type="text" id="user" placeholder="用户名">
+				<input type="password" id="password" placeholder="密码">
+
+				<div class="submit"><input style="width: 50%;height: 2rem;background-color: #0BE093;color: white;" type="button" onclick="mylogin()" value="登陆"></div>
+				<div class="clear"></div>
+				<div class="new">
+					<h3 onclick="xiugaiClk()"><a href="#">修改密码</a></h3>
+					<h4 onclick="zhuceClk()"><a href="#">新用户</a></h4>
+					<div class="clear"></div>
+				</div>
+			</form>
+		</div>
+		<!--start-copyright-->
+		<!--<div class="copy-right">
+				<p>Copyright &copy; 2015.Company name All rights reserved.<a target="_blank" href="http://sc.chinaz.com/moban/">&#x7F51;&#x9875;&#x6A21;&#x677F;</a></p>
+		</div>-->
+		<!--//end-copyright-->
+	</body>
+	<script src="js/mui.min.js"></script>
+	<script src="js/jquery.min.js"></script>
+	<script type="text/javascript">
+		mui.init({
+			keyEventBind: {
+				backbutton: false //关闭back按键监听1
+			}
+		});
+		//	横屏显示1
+		mui.plusReady(function() {
+			plus.screen.lockOrientation("landscape-primary");
+		});
+
+		$("#user").val(localStorage.getItem("UserPhone"));
+		$("#password").val(localStorage.getItem("password"));
+	</script>
+	<script type="text/javascript">
+		// 账号登录提交事件
+		function mylogin() {
+			var username = trim(document.getElementById("user").value);
+			var passsword = trim(document.getElementById("password").value);
+			var uuid = plus.device.uuid
+			//			var uuid = '73AA1553-8E95-49C5-A87D-B06E05416192'
+			console.log(uuid)
+			var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+			var sign = true;
+			if(username == "") {
+				mui.toast('用户名不能为空');
+				sign = false;
+				return false;
+			}
+			if(!myreg.test(username)) {
+				mui.toast('请输入有效的手机号码');
+				sign = false;
+				return false;
+			}
+
+			if(passsword == "") {
+				mui.toast('密码不能为空');
+				sign = false;
+				return false;
+			}
+
+			if(sign) {
+				mui.get('http://101.201.105.176:8015/api/AirInfo/GetUserInfo', {
+					'userPhone': username,
+					'passWord': passsword,
+					'uuid': uuid
+				}, function(data) {
+					console.log("qqqqqqqq")
+					console.log(data)
+					if(data == null) {
+
+						mui.toast('账号或密码错误');
+
+					} else if(String(data._userphone) == String(username)) {
+
+						if(JSON.stringify(data._uuid) == JSON.stringify(uuid)) {
+
+							mui.toast('登录成功');
+							localStorage.setItem("UserPhone", data._userphone);
+							localStorage.setItem("password", passsword);
+							localStorage.setItem("countrycode", data._countrycode);
+							cooke(data._userphone)
+//							localStorage.setItem('cloud_data', arr)
+							mui.openWindow({
+								url: "main.html",
+								id: "main",
+							});
+
+						}
+
+					} else if(data == '账户已登录') {
+						mui.toast('绑定设备ID不同，已有其他用户绑定!');
+					}
+
+				}, 'json');
+
+			}
+
+		}
+
+		function cooke(user) {
+			setCookie("username", user, 7);
+		}
+
+		function setCookie(cname, cvalue, exdays) {
+			var d = new Date();
+			d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+			var expires = "expires=" + d.toGMTString();
+			document.cookie = cname + "=" + cvalue + "; " + expires;
+		}
+
+		function zhuceClk() {
+			mui.openWindow({
+				url: 'loginnew.html',
+				id: 'loginnew.html',
+				extras: {
+					//自定义扩展参数，可以用来处理页面间传值
+				},
+
+			})
+		}
+
+		function xiugaiClk() {
+			mui.openWindow({
+				url: 'loginxiugai.html',
+				id: 'loginxiugai.html',
+				extras: {
+					//自定义扩展参数，可以用来处理页面间传值
+				},
+
+			})
+		}
+
+		// 清除字符串两边的空格
+		function trim(str) { //删除左右两端的空格
+			return str.replace(/(^\s*)|(\s*$)/g, "");　　
+		}
+	</script>
+
+</html>
